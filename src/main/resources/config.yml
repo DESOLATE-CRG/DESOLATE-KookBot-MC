@@ -1,2 +1,2 @@
-服务器IP:
-服务器端口:
+ServerIPAddress: "127.0.0.1"
+ServerPort: 25565
