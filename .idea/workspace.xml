@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e7f8f8bb-3bf8-4e1a-831c-8484e10a157a" name="更改" comment="增加服务端数据包解析算法" />
+    <list default="true" id="e7f8f8bb-3bf8-4e1a-831c-8484e10a157a" name="更改" comment="Sync" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -72,12 +72,20 @@
       <option name="project" value="LOCAL" />
       <updated>1684928749228</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Sync">
+      <created>1684929172068</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1684929172068</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="环境搭建" />
     <MESSAGE value="增加服务端数据包解析算法" />
-    <option name="LAST_COMMIT_MESSAGE" value="增加服务端数据包解析算法" />
+    <MESSAGE value="Sync" />
+    <option name="LAST_COMMIT_MESSAGE" value="Sync" />
   </component>
 </project>
