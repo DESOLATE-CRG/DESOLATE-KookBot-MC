@@ -1,0 +1,5 @@
+name: DESOLATE-KookBot-MC
+version: 1.0.0
+main: org.desolate.KookBotMain
+description: "在KOOK里获取MC服务器信息"
+api-version: 0.48.2
