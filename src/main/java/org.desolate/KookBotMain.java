@@ -32,7 +32,7 @@ public class KookBotMain extends BasePlugin{
                     if (arguments.length>=1&arguments[0]=="None"){
                         MultipleCardComponent NoneReplyCard=new CardBuilder()
                                 .setTheme(Theme.PRIMARY)
-                                .setSize(Size.MD)
+                                .setSize(Size.LG)
                                 .addModule(new HeaderModule(new PlainTextElement(senderName+"你想要查询什么呢？",false)))
                                 .addModule(new SectionModule(new PlainTextElement("使用方法："),null,null))
                                 .addModule(new SectionModule(new PlainTextElement("/查询 服务器信息-反馈服务器当前的信息"),null,null))
@@ -55,7 +55,6 @@ public class KookBotMain extends BasePlugin{
                         message.reply("None");
                     }
                 }).register(this);
-
     }
 
     @Override
