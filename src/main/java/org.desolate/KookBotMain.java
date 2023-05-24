@@ -12,18 +12,23 @@ import snw.jkook.plugin.BasePlugin;
 
 public class KookBotMain extends BasePlugin {
     private static KookBotMain instance;
+    private static GetMcServerDataPackAnalysis getMcServerDataPackAnalysis = new GetMcServerDataPackAnalysis();
 
     @Override
     public void onLoad() {
         instance = this;
+        //在插件加载时释放配置文件
+        saveDefaultConfig();
+        //设置全局配置
+        getMcServerDataPackAnalysis.setServerAddress(getConfig().getString("ServerIPAddress"));
+        getMcServerDataPackAnalysis.setServerPort(getConfig().getInt("ServerPort"));
         MyLogger("插件正在加载...");
     }
 
     @Override
     public void onEnable() {
-        saveDefaultConfig();
-        MyLogger("插件加载成功");
-
+        //
+        //注册命令
         new JKookCommand("查询")
                 .addOptionalArgument(String.class, "None")
                 .executesUser((sender, arguments, message) -> {
@@ -52,6 +57,7 @@ public class KookBotMain extends BasePlugin {
                         message.reply("None");
                     }
                 }).register(this);
+        MyLogger("插件加载成功");
     }
 
     @Override
