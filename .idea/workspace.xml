@@ -6,8 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="e7f8f8bb-3bf8-4e1a-831c-8484e10a157a" name="更改" comment="Sync">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org.desolate/GetMcServerDataPackAnalysis.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org.desolate/GetMcServerDataPackAnalysis.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org.desolate/KookBotMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org.desolate/KookBotMain.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,10 +42,22 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/Primary/Desktop/TempPrj/DESOLATE-KookBot-MC",
+    "last_opened_file_path": "C:/Users/Primary/Desktop/TempPrj/DESOLATE-KookBot-MC/target/copy.bat",
     "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable"
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration name="KOOKBC" type="JarApplication">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/../KOOKBC/kookbc-0.26.13.jar" />
+      <option name="PROGRAM_PARAMETERS" value="--token 1/MTYyNzM=/Efpw7/QT4GQN8cEJdf7iJA==" />
+      <option name="WORKING_DIRECTORY" value="C:\Users\Primary\Desktop\TempPrj\KOOKBC" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method v="2">
+        <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="package" />
+        <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_CopyT" />
+      </method>
+    </configuration>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="默认任务">
@@ -118,7 +130,14 @@
       <option name="project" value="LOCAL" />
       <updated>1684931564309</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Sync">
+      <created>1684933328393</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1684933328393</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">

@@ -1,5 +1,6 @@
 package org.desolate;
 
+import com.alibaba.fastjson2.JSONObject;
 import snw.jkook.command.JKookCommand;
 import snw.jkook.message.component.card.CardBuilder;
 import snw.jkook.message.component.card.MultipleCardComponent;
@@ -19,15 +20,14 @@ public class KookBotMain extends BasePlugin {
         instance = this;
         //在插件加载时释放配置文件
         saveDefaultConfig();
-        //设置全局配置
-        getMcServerDataPackAnalysis.setServerAddress(getConfig().getString("ServerIPAddress"));
-        getMcServerDataPackAnalysis.setServerPort(getConfig().getInt("ServerPort"));
         MyLogger("插件正在加载...");
     }
 
     @Override
     public void onEnable() {
-        //
+        //设置全局配置
+        getMcServerDataPackAnalysis.setServerAddress(getConfig().getString("ServerIPAddress"));
+        getMcServerDataPackAnalysis.setServerPort(getConfig().getInt("ServerPort"));
         //注册命令
         new JKookCommand("查询")
                 .addOptionalArgument(String.class, "None")
@@ -43,14 +43,22 @@ public class KookBotMain extends BasePlugin {
                                 .build();
                         message.reply(NoneReplyCard);
                     } else if (arguments[0].equals("服务器信息")) {
+                        //调用查询方法(已封装)
+                        JSONObject result = getMcServerDataPackAnalysis.getServerInfo();
+//                        MyLogger(getMcServerDataPackAnalysis.getServerAddress());
+//                        MyLogger(Integer.toString(getMcServerDataPackAnalysis.getServerPort()));
+                        String serverProtocol = "协议版本:" + result.getString("protocol").toString();
+                        String serverVersion = "服务器版本:" + result.getString("serverVersion").toString();
+                        String onlinePlayers = "在线玩家数/最大玩家数:" + result.getString("onlinePlayers").toString();
                         MultipleCardComponent ServerDataCard = new CardBuilder()
                                 .setTheme(Theme.PRIMARY)
                                 .setSize(Size.LG)
                                 .addModule(new HeaderModule(new PlainTextElement("DESOLATE-MC Server", false)))
-                                .addModule(new SectionModule(new PlainTextElement("协议版本"), null, null))
-                                .addModule(new SectionModule(new PlainTextElement("服务器版本"), null, null))
-                                .addModule(new SectionModule(new PlainTextElement("motd"), null, null))
-                                .addModule(new SectionModule(new PlainTextElement("在线玩家数/最大玩家数"), null, null))
+//                                .addModule(new SectionModule(new PlainTextElement(result.toString()), null, null))
+                                .addModule(new SectionModule(new PlainTextElement(serverProtocol), null, null))
+                                .addModule(new SectionModule(new PlainTextElement(serverVersion), null, null))
+//                                .addModule(new SectionModule(new PlainTextElement("motd"), null, null))
+                                .addModule(new SectionModule(new PlainTextElement(onlinePlayers), null, null))
                                 .build();
                         message.reply(ServerDataCard);
                     } else {

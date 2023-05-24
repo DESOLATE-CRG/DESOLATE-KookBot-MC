@@ -90,30 +90,33 @@ public class GetMcServerDataPackAnalysis {
             DataInputStream dataInputStream_Result = new DataInputStream(socket.getInputStream());
             readVarIntFromStream(dataInputStream_Result);
             //数据包标志
-            //int FLAG = readVarIntFromStream(dataInputStream_Result);
+            int FLAG = readVarIntFromStream(dataInputStream_Result);
             //数据包长度
             int LENGTH = readVarIntFromStream(dataInputStream_Result);
             byte[] data = new byte[LENGTH];
             dataInputStream_Result.readFully(data);
+            //KookBotMain.MyLogger(new String(data, StandardCharsets.UTF_8));
             return new String(data, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            e.printStackTrace();
+            e.getStackTrace();
             return new String("");
         }
     }
 
-    //解析数据包Json文本
-    public JSONObject AnalysisDataPack(){
+    //获取服务器信息 -- 解析数据包Json文本
+    public JSONObject getServerInfo() {
         String strDataPack = GetMcInfoDataPack();
-        if(!strDataPack.isEmpty()){
+        //KookBotMain.MyLogger(strDataPack);
+        if (!strDataPack.isEmpty()) {
             JSONObject jsonObject = JSONObject.parse(strDataPack);
             //重新封装需要的数据
             JSONObject result = new JSONObject();
             result.put("onlinePlayers", jsonObject.getJSONObject("players").getString("online"));
             result.put("protocol", jsonObject.getJSONObject("version").getString("protocol"));
+            result.put("serverVersion", jsonObject.getJSONObject("version").getString("name"));
             return result;
         } else {
-            return new JSONObject().parse("{\"msg:\"\"Analysis fail.\"}");
+            return new JSONObject().parse("{\"msg\":\"Analysis fail.\"}");
         }
     }
 }
