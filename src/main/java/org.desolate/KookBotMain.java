@@ -28,7 +28,6 @@ public class KookBotMain extends BasePlugin{
                 .addOptionalArgument(String.class,"None")
                 .executesUser((sender,arguments,message)->{
                     String senderName=sender.getName();
-                    String SelectA="服务器信息";
                     if (arguments.length>=1&arguments[0]=="None"){
                         MultipleCardComponent NoneReplyCard=new CardBuilder()
                                 .setTheme(Theme.PRIMARY)
@@ -39,17 +38,17 @@ public class KookBotMain extends BasePlugin{
                                 .build();
                         message.reply(NoneReplyCard);
                     }
-                    else if (arguments[0]==SelectA){
-                        MultipleCardComponent ServerDataCard=new CardBuilder()
-                                .setTheme(Theme.PRIMARY)
-                                .setSize(Size.LG)
-                                .addModule(new HeaderModule(new PlainTextElement("DESOLATE-MC Server",false)))
-                                .addModule(new SectionModule(new PlainTextElement("协议版本"),null,null))
-                                .addModule(new SectionModule(new PlainTextElement("服务器版本"),null,null))
-                                .addModule(new SectionModule(new PlainTextElement("motd"),null,null))
-                                .addModule(new SectionModule(new PlainTextElement("在线玩家数/最大玩家数"),null,null))
-                                .build();
-                        message.reply(ServerDataCard);
+                    else if (arguments[0].equals("服务器信息")) {
+                            MultipleCardComponent ServerDataCard = new CardBuilder()
+                                    .setTheme(Theme.PRIMARY)
+                                    .setSize(Size.LG)
+                                    .addModule(new HeaderModule(new PlainTextElement("DESOLATE-MC Server", false)))
+                                    .addModule(new SectionModule(new PlainTextElement("协议版本"), null, null))
+                                    .addModule(new SectionModule(new PlainTextElement("服务器版本"), null, null))
+                                    .addModule(new SectionModule(new PlainTextElement("motd"), null, null))
+                                    .addModule(new SectionModule(new PlainTextElement("在线玩家数/最大玩家数"), null, null))
+                                    .build();
+                            message.reply(ServerDataCard);
                     }
                     else {
                         message.reply("None");
