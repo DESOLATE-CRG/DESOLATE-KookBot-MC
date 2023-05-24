@@ -25,8 +25,8 @@ public class GetMcServerDatapackAnalysis {
         this.serverPort = serverPort;
     }
 
-    //int类型转varint算法
-    public static byte[] IntToVarint(int input) {
+    //int类型转VarInt算法
+    public static byte[] IntToVarInt(int input) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         while (true) {
             if ((input & ~0x7F) == 0) {
@@ -40,6 +40,24 @@ public class GetMcServerDatapackAnalysis {
     }
 
 
+    //VarInt类型字节流读取算法
+    public static int readVarIntFromStream(DataInputStream in) throws IOException {
+        int value = 0;
+        int length = 0;
+        byte currentByte;
+        while (true) {
+            currentByte = in.readByte();
+            value |= (currentByte & 0x7F) << (length * 7);
+            length += 1;
+            if (length > 5) {
+                throw new RuntimeException("VarInt类型数据太大了");
+            }
+            if ((currentByte & 0x80) != 0x80) {
+                break;
+            }
+        }
+        return value;
+    }
 
     //获取服务器状态(成功返回服务器信息数组，失败返回空字符串数组)
 
