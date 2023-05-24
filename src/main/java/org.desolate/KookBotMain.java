@@ -49,7 +49,7 @@ public class KookBotMain extends BasePlugin {
 //                        MyLogger(Integer.toString(getMcServerDataPackAnalysis.getServerPort()));
                         String serverProtocol = "协议版本:" + result.getString("protocol").toString();
                         String serverVersion = "服务器版本:" + result.getString("serverVersion").toString();
-                        String onlinePlayers = "在线玩家数/最大玩家数:" + result.getString("onlinePlayers").toString();
+                        String onlinePlayers = "在线玩家数/最大玩家数:" + result.getString("onlinePlayers").toString()+"/"+ result.getString("maxPlayers").toString();
                         MultipleCardComponent ServerDataCard = new CardBuilder()
                                 .setTheme(Theme.PRIMARY)
                                 .setSize(Size.LG)

@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e7f8f8bb-3bf8-4e1a-831c-8484e10a157a" name="更改" comment="Sync">
+    <list default="true" id="e7f8f8bb-3bf8-4e1a-831c-8484e10a157a" name="更改" comment="Fix bug">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org.desolate/GetMcServerDataPackAnalysis.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org.desolate/GetMcServerDataPackAnalysis.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org.desolate/KookBotMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org.desolate/KookBotMain.java" afterDir="false" />
@@ -137,14 +137,21 @@
       <option name="project" value="LOCAL" />
       <updated>1684933328393</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Fix bug">
+      <created>1684937193967</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1684937193967</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="环境搭建" />
     <MESSAGE value="增加服务端数据包解析算法" />
-    <MESSAGE value="Fix bug" />
     <MESSAGE value="Sync" />
-    <option name="LAST_COMMIT_MESSAGE" value="Sync" />
+    <MESSAGE value="Fix bug" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix bug" />
   </component>
 </project>

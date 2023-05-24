@@ -96,6 +96,7 @@ public class GetMcServerDataPackAnalysis {
             byte[] data = new byte[LENGTH];
             dataInputStream_Result.readFully(data);
             //KookBotMain.MyLogger(new String(data, StandardCharsets.UTF_8));
+            socket.close();
             return new String(data, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.getStackTrace();
@@ -112,6 +113,7 @@ public class GetMcServerDataPackAnalysis {
             //重新封装需要的数据
             JSONObject result = new JSONObject();
             result.put("onlinePlayers", jsonObject.getJSONObject("players").getString("online"));
+            result.put("maxPlayers", jsonObject.getJSONObject("players").getString("max"));
             result.put("protocol", jsonObject.getJSONObject("version").getString("protocol"));
             result.put("serverVersion", jsonObject.getJSONObject("version").getString("name"));
             return result;
