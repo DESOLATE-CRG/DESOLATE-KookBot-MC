@@ -1,5 +1,7 @@
 package org.desolate;
 
+import com.alibaba.fastjson2.JSONObject;
+
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
@@ -97,6 +99,21 @@ public class GetMcServerDataPackAnalysis {
         } catch (IOException e) {
             e.printStackTrace();
             return new String("");
+        }
+    }
+
+    //解析数据包Json文本
+    public JSONObject AnalysisDataPack(){
+        String strDataPack = GetMcInfoDataPack();
+        if(!strDataPack.isEmpty()){
+            JSONObject jsonObject = JSONObject.parse(strDataPack);
+            //重新封装需要的数据
+            JSONObject result = new JSONObject();
+            result.put("onlinePlayers", jsonObject.getJSONObject("players").getString("online"));
+            result.put("protocol", jsonObject.getJSONObject("version").getString("protocol"));
+            return result;
+        } else {
+            return new JSONObject().parse("{\"msg:\"\"Analysis fail.\"}");
         }
     }
 }
