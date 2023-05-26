@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e7f8f8bb-3bf8-4e1a-831c-8484e10a157a" name="更改" comment="Fix bug">
+    <list default="true" id="e7f8f8bb-3bf8-4e1a-831c-8484e10a157a" name="更改" comment="Sync">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -40,7 +40,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/Primary/Desktop/TempPrj/DESOLATE-KookBot-MC/target/copy.bat",
+    "last_opened_file_path": "D:/Project/Minecraft/D_Plugin/DESOLATE-KookBot-MC/target",
     "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable"
   }
 }]]></component>
@@ -48,11 +48,11 @@
     <configuration name="KOOKBC" type="JarApplication">
       <option name="JAR_PATH" value="$PROJECT_DIR$/../KOOKBC/kookbc-0.26.13.jar" />
       <option name="PROGRAM_PARAMETERS" value="--token 1/MTYyNzM=/Efpw7/QT4GQN8cEJdf7iJA==" />
-      <option name="WORKING_DIRECTORY" value="C:\Users\Primary\Desktop\TempPrj\KOOKBC" />
+      <option name="WORKING_DIRECTORY" value="D:\Project\Minecraft\D_Plugin\KOOKBC" />
       <option name="ALTERNATIVE_JRE_PATH" />
       <method v="2">
         <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="package" />
-        <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_CopyT" />
+        <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_Copy_DESOLATE-KookBot-MC" />
       </method>
     </configuration>
   </component>
@@ -149,7 +149,14 @@
       <option name="project" value="LOCAL" />
       <updated>1684937477906</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Sync">
+      <created>1684938994540</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1684938994540</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -166,8 +173,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="环境搭建" />
     <MESSAGE value="增加服务端数据包解析算法" />
-    <MESSAGE value="Sync" />
     <MESSAGE value="Fix bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix bug" />
+    <MESSAGE value="Sync" />
+    <option name="LAST_COMMIT_MESSAGE" value="Sync" />
   </component>
 </project>
