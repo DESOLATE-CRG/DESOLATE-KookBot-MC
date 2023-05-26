@@ -28,7 +28,7 @@ public class KookBotMain extends BasePlugin {
         //设置全局配置
         getMcServerDataPackAnalysis.setServerAddress(getConfig().getString("ServerIPAddress"));
         getMcServerDataPackAnalysis.setServerPort(getConfig().getInt("ServerPort"));
-        //注册命令
+        //注册命令 -- 查询服务器状态
         new JKookCommand("查询")
                 .addOptionalArgument(String.class, "None")
                 .executesUser((sender, arguments, message) -> {
@@ -71,6 +71,7 @@ public class KookBotMain extends BasePlugin {
                         message.reply("None");
                     }
                 }).register(this);
+        //注册命令 -- 获取玩家数据
         MyLogger("插件加载成功");
     }
 
