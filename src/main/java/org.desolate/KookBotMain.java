@@ -45,22 +45,32 @@ public class KookBotMain extends BasePlugin {
                     } else if (arguments[0].equals("服务器信息")) {
                         //调用查询方法(已封装)
                         JSONObject result = getMcServerDataPackAnalysis.getServerInfo();
+                        if (result.getString("msg").isEmpty()){
 //                        MyLogger(getMcServerDataPackAnalysis.getServerAddress());
 //                        MyLogger(Integer.toString(getMcServerDataPackAnalysis.getServerPort()));
-                        String serverProtocol = "协议版本:" + result.getString("protocol").toString();
-                        String serverVersion = "服务器版本:" + result.getString("serverVersion").toString();
-                        String onlinePlayers = "在线玩家数/最大玩家数:" + result.getString("onlinePlayers").toString()+"/"+ result.getString("maxPlayers").toString();
-                        MultipleCardComponent ServerDataCard = new CardBuilder()
-                                .setTheme(Theme.PRIMARY)
-                                .setSize(Size.LG)
-                                .addModule(new HeaderModule(new PlainTextElement("DESOLATE-MC Server", false)))
+                            String serverProtocol = "协议版本:" + result.getString("protocol").toString();
+                            String serverVersion = "服务器版本:" + result.getString("serverVersion").toString();
+                            String onlinePlayers = "在线玩家数/最大玩家数:" + result.getString("onlinePlayers").toString()+"/"+ result.getString("maxPlayers").toString();
+                            MultipleCardComponent ServerDataCard = new CardBuilder()
+                                    .setTheme(Theme.PRIMARY)
+                                    .setSize(Size.LG)
+                                    .addModule(new HeaderModule(new PlainTextElement("DESOLATE-MC Server", false)))
 //                                .addModule(new SectionModule(new PlainTextElement(result.toString()), null, null))
-                                .addModule(new SectionModule(new PlainTextElement(serverProtocol), null, null))
-                                .addModule(new SectionModule(new PlainTextElement(serverVersion), null, null))
+                                    .addModule(new SectionModule(new PlainTextElement(serverProtocol), null, null))
+                                    .addModule(new SectionModule(new PlainTextElement(serverVersion), null, null))
 //                                .addModule(new SectionModule(new PlainTextElement("motd"), null, null))
-                                .addModule(new SectionModule(new PlainTextElement(onlinePlayers), null, null))
-                                .build();
-                        message.reply(ServerDataCard);
+                                    .addModule(new SectionModule(new PlainTextElement(onlinePlayers), null, null))
+                                    .build();
+                            message.reply(ServerDataCard);
+                        }else {
+                            MultipleCardComponent multipleCardComponent = new CardBuilder()
+                                    .setTheme(Theme.PRIMARY)
+                                    .setSize(Size.LG)
+                                    .addModule(new HeaderModule(new PlainTextElement("DESOLATE-MC Server", false)))
+                                    .addModule(new HeaderModule(new PlainTextElement("错误: 服务器信息获取失败", false)))
+                                    .build();
+                            message.reply(multipleCardComponent);
+                        }
                     } else {
                         message.reply("None");
                     }
