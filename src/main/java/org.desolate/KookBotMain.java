@@ -13,7 +13,7 @@ import snw.jkook.plugin.BasePlugin;
 
 public class KookBotMain extends BasePlugin {
     private static KookBotMain instance;
-    private static GetMcServerDataPackAnalysis getMcServerDataPackAnalysis = new GetMcServerDataPackAnalysis();
+    private static final GetMcServerDataPackAnalysis getMcServerDataPackAnalysis = new GetMcServerDataPackAnalysis();
 
     @Override
     public void onLoad() {
@@ -41,14 +41,16 @@ public class KookBotMain extends BasePlugin {
                                 .addModule(new SectionModule(new PlainTextElement("使用方法："), null, null))
                                 .addModule(new SectionModule(new PlainTextElement("/查询 服务器信息-反馈服务器当前的信息"), null, null))
                                 .build();
-                        message.reply(NoneReplyCard);
+                        if (message != null) {
+                            message.reply(NoneReplyCard);
+                        }
                     } else if (arguments[0].equals("服务器信息")) {
                         //调用查询方法(已封装)
                         JSONObject result = getMcServerDataPackAnalysis.getServerInfo();
-                        if (result.getString("msg").isEmpty()) {
-                            String serverProtocol = "协议版本:" + result.getString("protocol").toString();
-                            String serverVersion = "服务器版本:" + result.getString("serverVersion").toString();
-                            String onlinePlayers = "在线玩家数/最大玩家数:" + result.getString("onlinePlayers").toString() + "/" + result.getString("maxPlayers").toString();
+                        if (!result.getString("protocol").isEmpty()) {
+                            String serverProtocol = "协议版本:" + result.getString("protocol");
+                            String serverVersion = "服务器版本:" + result.getString("serverVersion");
+                            String onlinePlayers = "在线玩家数/最大玩家数:" + result.getString("onlinePlayers") + "/" + result.getString("maxPlayers");
                             MultipleCardComponent ServerDataCard = new CardBuilder()
                                     .setTheme(Theme.PRIMARY)
                                     .setSize(Size.LG)
@@ -57,7 +59,9 @@ public class KookBotMain extends BasePlugin {
                                     .addModule(new SectionModule(new PlainTextElement(serverVersion), null, null))
                                     .addModule(new SectionModule(new PlainTextElement(onlinePlayers), null, null))
                                     .build();
-                            message.reply(ServerDataCard);
+                            if (message != null) {
+                                message.reply(ServerDataCard);
+                            }
                         } else {
                             MultipleCardComponent multipleCardComponent = new CardBuilder()
                                     .setTheme(Theme.PRIMARY)
@@ -65,10 +69,14 @@ public class KookBotMain extends BasePlugin {
                                     .addModule(new HeaderModule(new PlainTextElement("DESOLATE-MC Server", false)))
                                     .addModule(new HeaderModule(new PlainTextElement("错误: 服务器信息获取失败", false)))
                                     .build();
-                            message.reply(multipleCardComponent);
+                            if (message != null) {
+                                message.reply(multipleCardComponent);
+                            }
                         }
                     } else {
-                        message.reply("None");
+                        if (message != null) {
+                            message.reply("None");
+                        }
                     }
                 }).register(this);
         //注册命令 -- 获取玩家数据

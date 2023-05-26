@@ -10,16 +10,8 @@ public class GetMcServerDataPackAnalysis {
     private String serverAddress = "0.0.0.0";
     private int serverPort = 0;
 
-    public String getServerAddress() {
-        return serverAddress;
-    }
-
     public void setServerAddress(String serverAddress) {
         this.serverAddress = serverAddress;
-    }
-
-    public int getServerPort() {
-        return serverPort;
     }
 
     public void setServerPort(int serverPort) {
@@ -45,17 +37,14 @@ public class GetMcServerDataPackAnalysis {
         int value = 0;
         int length = 0;
         byte currentByte;
-        while (true) {
+        do {
             currentByte = in.readByte();
             value |= (currentByte & 0x7F) << (length * 7);
             length += 1;
             if (length > 5) {
                 throw new RuntimeException("VarInt类型数据太大了");
             }
-            if ((currentByte & 0x80) != 0x80) {
-                break;
-            }
-        }
+        } while ((currentByte & 0x80) == 0x80);
         return value;
     }
 
@@ -90,7 +79,7 @@ public class GetMcServerDataPackAnalysis {
             DataInputStream dataInputStream_Result = new DataInputStream(socket.getInputStream());
             readVarIntFromStream(dataInputStream_Result);
             //数据包标志
-            int FLAG = readVarIntFromStream(dataInputStream_Result);
+            readVarIntFromStream(dataInputStream_Result);
             //数据包长度
             int LENGTH = readVarIntFromStream(dataInputStream_Result);
             byte[] data = new byte[LENGTH];
@@ -100,7 +89,7 @@ public class GetMcServerDataPackAnalysis {
             return new String(data, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.getStackTrace();
-            return new String("");
+            return "";
         }
     }
 
@@ -118,7 +107,7 @@ public class GetMcServerDataPackAnalysis {
             result.put("serverVersion", jsonObject.getJSONObject("version").getString("name"));
             return result;
         } else {
-            return new JSONObject().parse("{\"msg\":\"Analysis fail.\"}");
+            return JSONObject.parse("{\"msg\":\"Analysis fail.\"}");
         }
     }
 }
