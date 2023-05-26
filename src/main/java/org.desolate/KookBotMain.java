@@ -48,9 +48,9 @@ public class KookBotMain extends BasePlugin {
                         //调用查询方法(已封装)
                         JSONObject result = getMcServerDataPackAnalysis.getServerInfo();
                         if (!result.getString("protocol").isEmpty()) {
-                            String serverProtocol = "协议版本:" + result.getString("protocol");
-                            String serverVersion = "服务器版本:" + result.getString("serverVersion");
-                            String onlinePlayers = "在线玩家数/最大玩家数:" + result.getString("onlinePlayers") + "/" + result.getString("maxPlayers");
+                            String serverProtocol = "协议版本: " + result.getString("protocol");
+                            String serverVersion = "服务器版本: " + result.getString("serverVersion");
+                            String onlinePlayers = "在线玩家数/最大玩家数: " + result.getString("onlinePlayers") + "/" + result.getString("maxPlayers");
                             MultipleCardComponent ServerDataCard = new CardBuilder()
                                     .setTheme(Theme.PRIMARY)
                                     .setSize(Size.LG)
@@ -63,23 +63,56 @@ public class KookBotMain extends BasePlugin {
                                 message.reply(ServerDataCard);
                             }
                         } else {
-                            MultipleCardComponent multipleCardComponent = new CardBuilder()
+                            MultipleCardComponent ERRORCard = new CardBuilder()
                                     .setTheme(Theme.PRIMARY)
                                     .setSize(Size.LG)
                                     .addModule(new HeaderModule(new PlainTextElement("DESOLATE-MC Server", false)))
                                     .addModule(new HeaderModule(new PlainTextElement("错误: 服务器信息获取失败", false)))
                                     .build();
                             if (message != null) {
-                                message.reply(multipleCardComponent);
+                                message.reply(ERRORCard);
                             }
                         }
-                    } else {
+                    }
+                     else {
                         if (message != null) {
                             message.reply("None");
                         }
                     }
                 }).register(this);
         //注册命令 -- 获取玩家数据
+        new JKookCommand("绑定")
+                .addOptionalArgument(String.class,"None")
+                        .executesUser((sender,arguments,message)->{
+                            String senderName=sender.getName();
+
+                            if (arguments.length>=1&arguments[0]=="None"){
+                                if (message != null) {
+                                    message.reply(senderName+" 请输入/绑定 [玩家ID] 来将你的KOOK和服务器绑定，请注意绑定时您需要在游戏内！");
+                                }
+                            }
+                            else {
+                                String PlayerName=(String) arguments[0];
+                                /*查询在线玩家
+                                String OnlinePlayer=
+                                if (OnlinePlayer==null){
+                                    message.reply("请检查玩家ID是否正确或玩家是否在游戏内!");
+                                    return;
+                                }
+
+                                 */
+                                MultipleCardComponent BindCard=new CardBuilder()
+                                        .setTheme(Theme.PRIMARY)
+                                        .setSize(Size.LG)
+                                        .addModule(new HeaderModule(new PlainTextElement("DESOLATE-MC Server",false)))
+                                        .addModule(new SectionModule(new PlainTextElement("KOOK"+senderName+"已成功绑定"+PlayerName),null,null))
+                                        .build();
+                                if (message!=null){
+                                    message.reply(BindCard);
+                                }
+                            }
+                        }).register(this);
+
         MyLogger("插件加载成功");
     }
 

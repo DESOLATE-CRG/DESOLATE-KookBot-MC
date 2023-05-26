@@ -3,3 +3,10 @@ version: 1.0.0
 main: org.desolate.KookBotMain
 description: "在KOOK里获取MC服务器信息"
 api-version: 0.48.2
+commands:
+  查询:
+    description: 查询关于DESOLATE0-MC服务器的信息
+    usage: /查询 【服务器信息/玩家ID】
+  绑定:
+    description: 绑定KOOK与MC服务器
+    usage: /绑定 【玩家ID】
