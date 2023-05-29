@@ -48,7 +48,8 @@ public class KookBotMain extends BasePlugin {
                                 .setSize(Size.LG)
                                 .addModule(new HeaderModule(new PlainTextElement(senderName + "你想要查询什么呢？", false)))
                                 .addModule(new SectionModule(new PlainTextElement("使用方法："), null, null))
-                                .addModule(new SectionModule(new PlainTextElement("/查询 服务器信息-反馈服务器当前的信息"), null, null))
+                                .addModule(new SectionModule(new PlainTextElement("/查询 服务器信息 - 反馈服务器当前的信息"), null, null))
+                                .addModule(new SectionModule(new PlainTextElement("/查询 PVP数据 - 查询自己的PVP数据情况"), null, null))
                                 .build();
                         if (message != null) {
                             message.reply(NoneReplyCard);
@@ -81,6 +82,12 @@ public class KookBotMain extends BasePlugin {
                             if (message != null) {
                                 message.reply(ERRORCard);
                             }
+                        }
+                    } else if (arguments[0].equals("PVP数据")) {
+                        if (jsonFileOperate.IfPlayerIsNoBinding(message.getId())) {
+
+                        } else {
+                            message.reply("检测到你没有绑定游戏账户哦，快快去绑定一个叭！");
                         }
                     } else {
                         if (message != null) {
@@ -120,13 +127,13 @@ public class KookBotMain extends BasePlugin {
                                             .setTheme(Theme.PRIMARY)
                                             .setSize(Size.LG)
                                             .addModule(new HeaderModule(new PlainTextElement("DESOLATE-MC Server", false)))
-                                            .addModule(new SectionModule(new PlainTextElement("KOOK用户: " + senderName + "\n游戏账户: " + PlayerName+"\n绑定成功!"), null, null))
+                                            .addModule(new SectionModule(new PlainTextElement("KOOK用户: " + senderName + "\n游戏账户: " + PlayerName + "\n绑定成功!"), null, null))
                                             .build();
                                     if (message != null) {
                                         message.reply(BindCard);
                                     }
                                 }
-                            }else {
+                            } else {
                                 message.reply("您已经绑定过游戏账户了哦，不能再次绑定了！");
                             }
                         } else {
