@@ -73,8 +73,7 @@ public class KookBotMain extends BasePlugin {
                                 message.reply(ERRORCard);
                             }
                         }
-                    }
-                     else {
+                    } else {
                         if (message != null) {
                             message.reply("None");
                         }
@@ -82,17 +81,16 @@ public class KookBotMain extends BasePlugin {
                 }).register(this);
         //注册命令 -- 获取玩家数据
         new JKookCommand("绑定")
-                .addOptionalArgument(String.class,"None")
-                        .executesUser((sender,arguments,message)->{
-                            String senderName=sender.getName();
+                .addOptionalArgument(String.class, "None")
+                .executesUser((sender, arguments, message) -> {
+                    String senderName = sender.getName();
 
-                            if (arguments.length>=1&arguments[0]=="None"){
-                                if (message != null) {
-                                    message.reply(senderName+" 请输入/绑定 [玩家ID] 来将你的KOOK和服务器绑定，请注意绑定时您需要在游戏内！");
-                                }
-                            }
-                            else {
-                                String PlayerName=(String) arguments[0];
+                    if (arguments.length >= 1 & arguments[0] == "None") {
+                        if (message != null) {
+                            message.reply(senderName + " 请输入/绑定 [玩家ID] 来将你的KOOK和服务器绑定，请注意绑定时您需要在游戏内！");
+                        }
+                    } else {
+                        String PlayerName = (String) arguments[0];
                                 /*查询在线玩家
                                 String OnlinePlayer=
                                 if (OnlinePlayer==null){
@@ -101,17 +99,17 @@ public class KookBotMain extends BasePlugin {
                                 }
 
                                  */
-                                MultipleCardComponent BindCard=new CardBuilder()
-                                        .setTheme(Theme.PRIMARY)
-                                        .setSize(Size.LG)
-                                        .addModule(new HeaderModule(new PlainTextElement("DESOLATE-MC Server",false)))
-                                        .addModule(new SectionModule(new PlainTextElement("KOOK"+senderName+"已成功绑定"+PlayerName),null,null))
-                                        .build();
-                                if (message!=null){
-                                    message.reply(BindCard);
-                                }
-                            }
-                        }).register(this);
+                        MultipleCardComponent BindCard = new CardBuilder()
+                                .setTheme(Theme.PRIMARY)
+                                .setSize(Size.LG)
+                                .addModule(new HeaderModule(new PlainTextElement("DESOLATE-MC Server", false)))
+                                .addModule(new SectionModule(new PlainTextElement("KOOK" + senderName + "已成功绑定" + PlayerName), null, null))
+                                .build();
+                        if (message != null) {
+                            message.reply(BindCard);
+                        }
+                    }
+                }).register(this);
 
         MyLogger("插件加载成功");
     }
