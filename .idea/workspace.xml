@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e7f8f8bb-3bf8-4e1a-831c-8484e10a157a" name="更改" comment="Sync">
+    <list default="true" id="e7f8f8bb-3bf8-4e1a-831c-8484e10a157a" name="更改" comment="Fix bug">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org.desolate/KookBotMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org.desolate/KookBotMain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org.desolate/GetMcServerDataPackAnalysis.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org.desolate/GetMcServerDataPackAnalysis.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

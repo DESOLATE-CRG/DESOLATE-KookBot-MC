@@ -1,5 +1,6 @@
 package org.desolate;
 
+import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 
 import java.io.*;
@@ -101,10 +102,21 @@ public class GetMcServerDataPackAnalysis {
             JSONObject jsonObject = JSONObject.parse(strDataPack);
             //重新封装需要的数据
             JSONObject result = new JSONObject();
-            result.put("onlinePlayers", jsonObject.getJSONObject("players").getString("online"));
-            result.put("maxPlayers", jsonObject.getJSONObject("players").getString("max"));
-            result.put("protocol", jsonObject.getJSONObject("version").getString("protocol"));
-            result.put("serverVersion", jsonObject.getJSONObject("version").getString("name"));
+            //服务器状态数据封装
+            JSONObject statusData = new JSONObject();
+            statusData.put("onlinePlayers", jsonObject.getJSONObject("players").getString("online"));
+            statusData.put("maxPlayers", jsonObject.getJSONObject("players").getString("max"));
+            statusData.put("protocol", jsonObject.getJSONObject("version").getString("protocol"));
+            statusData.put("serverVersion", jsonObject.getJSONObject("version").getString("name"));
+            //服务器在线玩家数据封装
+            JSONObject onlinePlayerList = new JSONObject();
+            if (!jsonObject.getJSONObject("players").getString("sample").isEmpty())
+                onlinePlayerList.put("playerList", jsonObject.getJSONObject("players").getString("sample"));
+            else
+                onlinePlayerList.put("playerList", new JSONArray());
+            //结果封装
+            result.put("status", statusData);
+            result.put("onlinePlayerList", onlinePlayerList);
             return result;
         } else {
             return JSONObject.parse("{\"msg\":\"Analysis fail.\"}");
