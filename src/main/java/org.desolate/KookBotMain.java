@@ -47,10 +47,10 @@ public class KookBotMain extends BasePlugin {
                     } else if (arguments[0].equals("服务器信息")) {
                         //调用查询方法(已封装)
                         JSONObject result = getMcServerDataPackAnalysis.getServerInfo();
-                        if (!result.getString("protocol").isEmpty()) {
-                            String serverProtocol = "协议版本: " + result.getString("protocol");
-                            String serverVersion = "服务器版本: " + result.getString("serverVersion");
-                            String onlinePlayers = "在线玩家数/最大玩家数: " + result.getString("onlinePlayers") + "/" + result.getString("maxPlayers");
+                        if (!result.getJSONObject("status").getString("protocol").isEmpty()) {
+                            String serverProtocol = "协议版本: " + result.getJSONObject("status").getString("protocol");
+                            String serverVersion = "服务器版本: " + result.getJSONObject("status").getString("serverVersion");
+                            String onlinePlayers = "在线玩家数/最大玩家数: " + result.getJSONObject("status").getString("onlinePlayers") + "/" + result.getJSONObject("status").getString("maxPlayers");
                             MultipleCardComponent ServerDataCard = new CardBuilder()
                                     .setTheme(Theme.PRIMARY)
                                     .setSize(Size.LG)
