@@ -11,11 +11,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AnalysisYmlFile {
-    public static String getYmlValue(String ymlPath, String cronName) {
+    private String ymlFilePath = "";
+
+    public void setYmlFilePath(String ymlFilePath) {
+        this.ymlFilePath = ymlFilePath;
+    }
+
+    public String getYmlValue(String cronName) {
         ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
         InputStream input = null;
         try {
-            input = new FileInputStream(ymlPath);
+            input = new FileInputStream(ymlFilePath);
         } catch (FileNotFoundException e) {
             return null;
         }

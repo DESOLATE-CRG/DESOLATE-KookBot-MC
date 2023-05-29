@@ -110,7 +110,7 @@ public class GetMcServerDataPackAnalysis {
             statusData.put("serverVersion", jsonObject.getJSONObject("version").getString("name"));
             //服务器在线玩家数据封装
             JSONObject onlinePlayerList = new JSONObject();
-            if (!jsonObject.getJSONObject("players").getString("sample").isEmpty())
+            if (jsonObject.getJSONObject("players").getJSONArray("sample") != null)
                 onlinePlayerList.put("playerList", jsonObject.getJSONObject("players").getString("sample"));
             else
                 onlinePlayerList.put("playerList", new JSONArray());

@@ -1,5 +1,6 @@
 package org.desolate;
 
+import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import snw.jkook.command.JKookCommand;
 import snw.jkook.message.component.card.CardBuilder;
@@ -11,9 +12,13 @@ import snw.jkook.message.component.card.module.HeaderModule;
 import snw.jkook.message.component.card.module.SectionModule;
 import snw.jkook.plugin.BasePlugin;
 
+import java.util.Objects;
+
 public class KookBotMain extends BasePlugin {
     private static KookBotMain instance;
     private static final GetMcServerDataPackAnalysis getMcServerDataPackAnalysis = new GetMcServerDataPackAnalysis();
+    private static final AnalysisYmlFile analysisYmlFile = new AnalysisYmlFile();
+    private static final JsonFileOperate jsonFileOperate = new JsonFileOperate();
 
     @Override
     public void onLoad() {
@@ -28,6 +33,10 @@ public class KookBotMain extends BasePlugin {
         //设置全局配置
         getMcServerDataPackAnalysis.setServerAddress(getConfig().getString("ServerIPAddress"));
         getMcServerDataPackAnalysis.setServerPort(getConfig().getInt("ServerPort"));
+        analysisYmlFile.setYmlFilePath(getConfig().getString("YmlFilePath"));
+        jsonFileOperate.setDataFolderPath(getDataFolder().getPath());
+        jsonFileOperate.DatabaseFileInit();
+
         //注册命令 -- 查询服务器状态
         new JKookCommand("查询")
                 .addOptionalArgument(String.class, "None")
@@ -84,29 +93,46 @@ public class KookBotMain extends BasePlugin {
                 .addOptionalArgument(String.class, "None")
                 .executesUser((sender, arguments, message) -> {
                     String senderName = sender.getName();
-
                     if (arguments.length >= 1 & arguments[0] == "None") {
                         if (message != null) {
                             message.reply(senderName + " 请输入/绑定 [玩家游戏昵称] 来将你的KOOK和服务器绑定，请注意绑定时您需要在游戏内！");
                         }
                     } else {
                         String PlayerName = (String) arguments[0];
-                                /*查询在线玩家
-                                String OnlinePlayer=
-                                if (OnlinePlayer==null){
-                                    message.reply("请检查玩家ID是否正确或玩家是否在游戏内!");
-                                    return;
+                        String PlayerUUID = "00000000-0000-0000-0000-000000000000";
+                        //获取数据
+                        JSONObject jsonDataPack = getMcServerDataPackAnalysis.getServerInfo();
+                        JSONArray jsonArrayList = JSONArray.parse(jsonDataPack.getJSONObject("onlinePlayerList").getString("playerList"));
+                        for (Object item : jsonArrayList) {
+                            JSONObject temp = JSONObject.parse(item.toString());
+                            if (Objects.equals(temp.getString("name"), PlayerName)) {
+                                PlayerUUID = temp.getString("id");
+                                break;
+                            }
+                        }
+                        //判玩家是否在线
+                        if (!Objects.equals(PlayerUUID, "00000000-0000-0000-0000-000000000000")) {
+                            //判玩家是否已绑定
+                            if (jsonFileOperate.IfPlayerIsNoBinding(sender.getId())) {
+                                //添加新玩家绑定
+                                if (jsonFileOperate.AddNewBinding(PlayerName, PlayerUUID, sender.getId())) {
+                                    MultipleCardComponent BindCard = new CardBuilder()
+                                            .setTheme(Theme.PRIMARY)
+                                            .setSize(Size.LG)
+                                            .addModule(new HeaderModule(new PlainTextElement("DESOLATE-MC Server", false)))
+                                            .addModule(new SectionModule(new PlainTextElement("KOOK用户: " + senderName + "\n游戏账户: " + PlayerName+"\n绑定成功!"), null, null))
+                                            .build();
+                                    if (message != null) {
+                                        message.reply(BindCard);
+                                    }
                                 }
-
-                                 */
-                        MultipleCardComponent BindCard = new CardBuilder()
-                                .setTheme(Theme.PRIMARY)
-                                .setSize(Size.LG)
-                                .addModule(new HeaderModule(new PlainTextElement("DESOLATE-MC Server", false)))
-                                .addModule(new SectionModule(new PlainTextElement("KOOK" + senderName + "已成功绑定" + PlayerName), null, null))
-                                .build();
-                        if (message != null) {
-                            message.reply(BindCard);
+                            }else {
+                                message.reply("您已经绑定过游戏账户了哦，不能再次绑定了！");
+                            }
+                        } else {
+                            if (message != null) {
+                                message.reply("请检查玩家ID是否正确或玩家是否在游戏内！");
+                            }
                         }
                     }
                 }).register(this);

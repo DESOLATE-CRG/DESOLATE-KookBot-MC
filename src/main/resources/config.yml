@@ -1,2 +1,3 @@
 ServerIPAddress: "127.0.0.1"
 ServerPort: 25565
+YmlFilePath: "C://example.yml"
