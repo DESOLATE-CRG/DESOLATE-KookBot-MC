@@ -87,7 +87,7 @@ public class KookBotMain extends BasePlugin {
 
                     if (arguments.length >= 1 & arguments[0] == "None") {
                         if (message != null) {
-                            message.reply(senderName + " 请输入/绑定 [玩家ID] 来将你的KOOK和服务器绑定，请注意绑定时您需要在游戏内！");
+                            message.reply(senderName + " 请输入/绑定 [玩家游戏昵称] 来将你的KOOK和服务器绑定，请注意绑定时您需要在游戏内！");
                         }
                     } else {
                         String PlayerName = (String) arguments[0];
@@ -110,7 +110,6 @@ public class KookBotMain extends BasePlugin {
                         }
                     }
                 }).register(this);
-
         MyLogger("插件加载成功");
     }
 
