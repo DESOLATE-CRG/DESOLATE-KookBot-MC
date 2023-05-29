@@ -85,7 +85,7 @@ public class KookBotMain extends BasePlugin {
                         }
                     } else if (arguments[0].equals("PVP数据")) {
                         if (jsonFileOperate.IfPlayerIsNoBinding(message.getId())) {
-
+                            //玩家已绑定
                         } else {
                             message.reply("检测到你没有绑定游戏账户哦，快快去绑定一个叭！");
                         }

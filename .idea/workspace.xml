@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e7f8f8bb-3bf8-4e1a-831c-8484e10a157a" name="更改" comment="Add player binding logic and fix bug">
+    <list default="true" id="e7f8f8bb-3bf8-4e1a-831c-8484e10a157a" name="更改" comment="Update basic logic">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org.desolate/KookBotMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org.desolate/KookBotMain.java" afterDir="false" />
     </list>
@@ -223,7 +223,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685376209283</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Update basic logic">
+      <created>1685379180731</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1685379180731</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -246,7 +253,8 @@
     <MESSAGE value="Update data acquisition method" />
     <MESSAGE value="Add ymlFile analysis" />
     <MESSAGE value="Add player binding logic and fix bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add player binding logic and fix bug" />
+    <MESSAGE value="Update basic logic" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update basic logic" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
