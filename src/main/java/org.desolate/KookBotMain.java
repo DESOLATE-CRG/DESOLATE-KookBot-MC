@@ -84,8 +84,26 @@ public class KookBotMain extends BasePlugin {
                             }
                         }
                     } else if (arguments[0].equals("PVP数据")) {
-                        if (jsonFileOperate.IfPlayerIsNoBinding(message.getId())) {
+                        if (!jsonFileOperate.IfPlayerIsNoBinding(sender.getId())) {
                             //玩家已绑定
+                            JSONObject currentPlayerInfo = jsonFileOperate.getCurrentClassPlayerInfo();
+                            String cPlayerName = analysisYmlFile.getYmlValue(currentPlayerInfo.getString("playerUUID") + ".name");
+                            String cPlayerKills = analysisYmlFile.getYmlValue(currentPlayerInfo.getString("playerUUID") + ".kills");
+                            String cPlayerDeaths = analysisYmlFile.getYmlValue(currentPlayerInfo.getString("playerUUID") + ".deaths");
+                            String cPlayerStreak = analysisYmlFile.getYmlValue(currentPlayerInfo.getString("playerUUID") + ".streak");
+                            //构建卡片信息
+                            MultipleCardComponent PlayerInfoCard = new CardBuilder()
+                                    .setTheme(Theme.PRIMARY)
+                                    .setSize(Size.LG)
+                                    .addModule(new HeaderModule(new PlainTextElement("DESOLATE-PVP-DataQuery", false)))
+                                    .addModule(new HeaderModule(new PlainTextElement("游戏昵称: " + cPlayerName, false)))
+                                    .addModule(new HeaderModule(new PlainTextElement("击杀数量: " + cPlayerKills, false)))
+                                    .addModule(new HeaderModule(new PlainTextElement("死亡次数: " + cPlayerDeaths, false)))
+                                    .addModule(new HeaderModule(new PlainTextElement("运气率: " + cPlayerStreak, false)))
+                                    .build();
+                            if (message != null) {
+                                message.reply(PlayerInfoCard);
+                            }
                         } else {
                             message.reply("检测到你没有绑定游戏账户哦，快快去绑定一个叭！");
                         }

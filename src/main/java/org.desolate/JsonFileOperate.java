@@ -10,10 +10,15 @@ import java.util.Objects;
 
 public class JsonFileOperate {
     private String dataFolderPath = "";
-    private String fileName = "/PlayerDatabase.json";
+    private final String fileName = "/PlayerDatabase.json";
+    private JSONObject currentClassPlayerInfo = new JSONObject();
 
     public void setDataFolderPath(String dataFolderPath) {
         this.dataFolderPath = dataFolderPath;
+    }
+
+    public JSONObject getCurrentClassPlayerInfo() {
+        return currentClassPlayerInfo;
     }
 
     public boolean DatabaseFileInit() {
@@ -57,13 +62,11 @@ public class JsonFileOperate {
                 JSONObject jsonObject = JSONObject.parse(item.toString());
                 if (Objects.equals(jsonObject.getString("playerKookID"), playerKookID)) {
                     playerName = jsonObject.getString("playerName");
+                    this.currentClassPlayerInfo = jsonObject;
                 }
             }
-            //判断玩家是否存在
-            if (Objects.equals(playerName, "None_Player_String"))
-                return true;
-            else
-                return false;
+            //判断玩家是否存在(true表示玩家不在数据库内,即未绑定)
+            return Objects.equals(playerName, "None_Player_String");
         } catch (IOException e) {
             KookBotMain.MyLogger(e.getMessage());
             //抓取到错误默认判断用户绑定存在以防不可预料错误

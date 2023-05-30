@@ -17,7 +17,8 @@ public class AnalysisYmlFile {
         this.ymlFilePath = ymlFilePath;
     }
 
-    public String getYmlValue(String cronName) {
+    //解析yml封装
+    public String getYmlValue(String ymlKeyPath) {
         ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
         InputStream input = null;
         try {
@@ -31,14 +32,17 @@ public class AnalysisYmlFile {
         } catch (IOException e) {
             return null;
         }
-        String[] split = cronName.split("\\.");
+        String[] split = ymlKeyPath.split("\\.");
         Map info = new HashMap();
         String cron = "";
         for (int i = 0; i < split.length; i++) {
             if (i == 0) {
                 info = (Map) map.get(split[i]);
             } else if (i == split.length - 1) {
-                cron = (String) info.get(split[i]);
+                if (info.get(split[i]) instanceof String)
+                    cron = (String) info.get(split[i]);
+                else
+                    cron = Integer.toString((Integer) info.get(split[i]));
             } else {
                 info = (Map) info.get(split[i]);
             }
