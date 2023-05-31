@@ -110,7 +110,9 @@ public class KookBotMain extends BasePlugin {
                                 message.reply(PlayerInfoCard);
                             }
                         } else {
-                            message.reply("检测到你没有绑定游戏账户哦，快快去绑定一个叭！");
+                            if (message != null) {
+                                message.reply("检测到你没有绑定游戏账户哦，快快去绑定一个叭！");
+                            }
                         }
                     } else {
                         if (message != null) {
@@ -157,7 +159,9 @@ public class KookBotMain extends BasePlugin {
                                     }
                                 }
                             } else {
-                                message.reply("您已经绑定过游戏账户了哦，不能再次绑定了！");
+                                if (message != null) {
+                                    message.reply("您已经绑定过游戏账户了哦，不能再次绑定了！");
+                                }
                             }
                         } else {
                             if (message != null) {
