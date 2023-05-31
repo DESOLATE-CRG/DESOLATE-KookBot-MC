@@ -91,15 +91,20 @@ public class KookBotMain extends BasePlugin {
                             String cPlayerKills = analysisYmlFile.getYmlValue(currentPlayerInfo.getString("playerUUID") + ".kills");
                             String cPlayerDeaths = analysisYmlFile.getYmlValue(currentPlayerInfo.getString("playerUUID") + ".deaths");
                             String cPlayerStreak = analysisYmlFile.getYmlValue(currentPlayerInfo.getString("playerUUID") + ".streak");
+                            double kill= Double.parseDouble(cPlayerKills);
+                            double death= Double.parseDouble(cPlayerDeaths);
+                            double ratio=kill/death;
+                            String PlayerRatio= String.format("%.2f",ratio);
                             //构建卡片信息
                             MultipleCardComponent PlayerInfoCard = new CardBuilder()
                                     .setTheme(Theme.PRIMARY)
                                     .setSize(Size.LG)
                                     .addModule(new HeaderModule(new PlainTextElement("DESOLATE-PVP-DataQuery", false)))
-                                    .addModule(new HeaderModule(new PlainTextElement("游戏昵称: " + cPlayerName, false)))
-                                    .addModule(new HeaderModule(new PlainTextElement("击杀数量: " + cPlayerKills, false)))
-                                    .addModule(new HeaderModule(new PlainTextElement("死亡次数: " + cPlayerDeaths, false)))
-                                    .addModule(new HeaderModule(new PlainTextElement("运气率: " + cPlayerStreak, false)))
+                                    .addModule(new SectionModule(new PlainTextElement("游戏昵称: " + cPlayerName, false),null,null))
+                                    .addModule(new SectionModule(new PlainTextElement("击杀: " + cPlayerKills, false),null,null))
+                                    .addModule(new SectionModule(new PlainTextElement("死亡: " + cPlayerDeaths, false),null,null))
+                                    .addModule(new SectionModule(new PlainTextElement("Ratio: "+PlayerRatio,false),null,null))
+                                    .addModule(new SectionModule(new PlainTextElement("最高连杀: " + cPlayerStreak, false),null,null))
                                     .build();
                             if (message != null) {
                                 message.reply(PlayerInfoCard);
