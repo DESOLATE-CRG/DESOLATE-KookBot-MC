@@ -3,6 +3,7 @@ package org.desolate;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import snw.jkook.command.JKookCommand;
+import snw.jkook.entity.Guild;
 import snw.jkook.message.component.card.CardBuilder;
 import snw.jkook.message.component.card.MultipleCardComponent;
 import snw.jkook.message.component.card.Size;
@@ -12,10 +13,12 @@ import snw.jkook.message.component.card.module.HeaderModule;
 import snw.jkook.message.component.card.module.SectionModule;
 import snw.jkook.plugin.BasePlugin;
 
+import java.util.Collection;
 import java.util.Objects;
 
 public class KookBotMain extends BasePlugin {
     private static KookBotMain instance;
+    private static Guild currentMessageGuild;
     private static final GetMcServerDataPackAnalysis getMcServerDataPackAnalysis = new GetMcServerDataPackAnalysis();
     private static final AnalysisYmlFile analysisYmlFile = new AnalysisYmlFile();
     private static final JsonFileOperate jsonFileOperate = new JsonFileOperate();
@@ -36,6 +39,8 @@ public class KookBotMain extends BasePlugin {
         analysisYmlFile.setYmlFilePath(getConfig().getString("YmlFilePath"));
         jsonFileOperate.setDataFolderPath(getDataFolder().getPath());
         jsonFileOperate.DatabaseFileInit();
+        //注册监听器
+        getCore().getEventManager().registerHandlers(this, new MyEventListener());
 
         //更新命令注册分类
         new JKookCommand("ServerInfo")
@@ -82,7 +87,7 @@ public class KookBotMain extends BasePlugin {
                                 .addModule(new SectionModule(new PlainTextElement("/ServerInfo SelfPVP - 查询自己的PVP数据(需绑定游戏账户)"), null, null))
                                 .addModule(new SectionModule(new PlainTextElement("/ServerInfo bind {PlayerName} - 绑定自己的游戏账户\nTips: 请注意绑定时您需要在游戏内"), null, null))
                                 .build();
-                    } else if (arguments[0].toString().equalsIgnoreCase("bind")&&arguments.length>=2) {
+                    } else if (arguments[0].toString().equalsIgnoreCase("bind") && arguments.length >= 2) {
                         String PlayerName = (String) arguments[1];
                         String PlayerUUID = "00000000-0000-0000-0000-000000000000";
                         //获取数据
@@ -154,11 +159,10 @@ public class KookBotMain extends BasePlugin {
                         }
                     }
                 }).register(this);
-//        new JKookCommand("换绑")
-//                .addOptionalArgument(String.class, "None")
-//                .executesUser((sender, arguments, message) -> {
-//
-//                }).register(this);
+        new JKookCommand("换绑")
+                .addOptionalArgument(String.class, "None")
+                .executesUser((sender, arguments, message) -> {
+                }).register(this);
         MyLogger("插件加载成功");
     }
 
@@ -173,5 +177,9 @@ public class KookBotMain extends BasePlugin {
 
     public static KookBotMain getInstance() {
         return instance;
+    }
+
+    public static void setCurrentMessageGuild(Guild currentMessageGuild) {
+        KookBotMain.currentMessageGuild = currentMessageGuild;
     }
 }
