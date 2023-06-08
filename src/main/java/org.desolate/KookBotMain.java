@@ -12,9 +12,13 @@ import snw.jkook.message.component.card.element.PlainTextElement;
 import snw.jkook.message.component.card.module.HeaderModule;
 import snw.jkook.message.component.card.module.SectionModule;
 import snw.jkook.plugin.BasePlugin;
+import snw.jkook.scheduler.Scheduler;
+import snw.jkook.scheduler.Task;
 
 import java.util.Collection;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class KookBotMain extends BasePlugin {
     private static KookBotMain instance;
@@ -39,8 +43,6 @@ public class KookBotMain extends BasePlugin {
         analysisYmlFile.setYmlFilePath(getConfig().getString("YmlFilePath"));
         jsonFileOperate.setDataFolderPath(getDataFolder().getPath());
         jsonFileOperate.DatabaseFileInit();
-        //注册监听器
-        getCore().getEventManager().registerHandlers(this, new MyEventListener());
 
         //更新命令注册分类
         new JKookCommand("ServerInfo")
@@ -157,11 +159,9 @@ public class KookBotMain extends BasePlugin {
                                 message.reply("检测到你没有绑定游戏账户哦，快快去绑定一个叭！");
                             }
                         }
+                    } else if (arguments[0].toString().equalsIgnoreCase("changeBind") && arguments.length >= 2) {
+
                     }
-                }).register(this);
-        new JKookCommand("换绑")
-                .addOptionalArgument(String.class, "None")
-                .executesUser((sender, arguments, message) -> {
                 }).register(this);
         MyLogger("插件加载成功");
     }
