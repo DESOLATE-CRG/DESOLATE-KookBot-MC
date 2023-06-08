@@ -2,7 +2,18 @@ package org.desolate;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import snw.jkook.HttpAPI;
+import snw.jkook.Permission;
 import snw.jkook.command.JKookCommand;
+import snw.jkook.Permission.*;
+import snw.jkook.entity.*;
+import snw.jkook.entity.channel.Category;
+import snw.jkook.entity.channel.Channel;
+import snw.jkook.entity.channel.TextChannel;
+import snw.jkook.entity.channel.VoiceChannel;
+import snw.jkook.entity.mute.MuteResult;
+import snw.jkook.message.Message;
+import snw.jkook.message.TextChannelMessage;
 import snw.jkook.message.component.card.CardBuilder;
 import snw.jkook.message.component.card.MultipleCardComponent;
 import snw.jkook.message.component.card.Size;
@@ -11,8 +22,12 @@ import snw.jkook.message.component.card.element.PlainTextElement;
 import snw.jkook.message.component.card.module.HeaderModule;
 import snw.jkook.message.component.card.module.SectionModule;
 import snw.jkook.plugin.BasePlugin;
+import snw.jkook.plugin.Plugin;
+import snw.jkook.util.PageIterator;
 
+import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 
 public class KookBotMain extends BasePlugin {
     private static KookBotMain instance;
@@ -37,24 +52,14 @@ public class KookBotMain extends BasePlugin {
         jsonFileOperate.setDataFolderPath(getDataFolder().getPath());
         jsonFileOperate.DatabaseFileInit();
 
-        //注册命令 -- 查询服务器状态
-        new JKookCommand("查询")
-                .addOptionalArgument(String.class, "None")
+        //更新命令注册分类
+        new JKookCommand("ServerInfo")
+                .addPrefix("")
+                .addOptionalArgument(String.class, "default")
                 .executesUser((sender, arguments, message) -> {
                     String senderName = sender.getName();
-                    if (arguments.length >= 1 & arguments[0] == "None") {
-                        MultipleCardComponent NoneReplyCard = new CardBuilder()
-                                .setTheme(Theme.PRIMARY)
-                                .setSize(Size.LG)
-                                .addModule(new HeaderModule(new PlainTextElement(senderName + "你想要查询什么呢？", false)))
-                                .addModule(new SectionModule(new PlainTextElement("使用方法："), null, null))
-                                .addModule(new SectionModule(new PlainTextElement("/查询 服务器信息 - 反馈服务器当前的信息"), null, null))
-                                .addModule(new SectionModule(new PlainTextElement("/查询 PVP数据 - 查询自己的PVP数据情况"), null, null))
-                                .build();
-                        if (message != null) {
-                            message.reply(NoneReplyCard);
-                        }
-                    } else if (arguments[0].equals("服务器信息")) {
+                    //根命令获取服务器状态信息
+                    if (Objects.equals(arguments[0], "default")) {
                         //调用查询方法(已封装)
                         JSONObject result = getMcServerDataPackAnalysis.getServerInfo();
                         if (!result.getJSONObject("status").getString("protocol").isEmpty()) {
@@ -64,7 +69,7 @@ public class KookBotMain extends BasePlugin {
                             MultipleCardComponent ServerDataCard = new CardBuilder()
                                     .setTheme(Theme.PRIMARY)
                                     .setSize(Size.LG)
-                                    .addModule(new HeaderModule(new PlainTextElement("DESOLATE-MC Server", false)))
+                                    .addModule(new HeaderModule(new PlainTextElement("DESOLATE-MC-Bot(ServerInfo)", false)))
                                     .addModule(new SectionModule(new PlainTextElement(serverProtocol), null, null))
                                     .addModule(new SectionModule(new PlainTextElement(serverVersion), null, null))
                                     .addModule(new SectionModule(new PlainTextElement(onlinePlayers), null, null))
@@ -76,61 +81,24 @@ public class KookBotMain extends BasePlugin {
                             MultipleCardComponent ERRORCard = new CardBuilder()
                                     .setTheme(Theme.PRIMARY)
                                     .setSize(Size.LG)
-                                    .addModule(new HeaderModule(new PlainTextElement("DESOLATE-MC Server", false)))
+                                    .addModule(new HeaderModule(new PlainTextElement("DESOLATE-MC-Bot(ServerInfo)", false)))
                                     .addModule(new HeaderModule(new PlainTextElement("错误: 服务器信息获取失败", false)))
                                     .build();
                             if (message != null) {
                                 message.reply(ERRORCard);
                             }
                         }
-                    } else if (arguments[0].equals("PVP数据")) {
-                        if (!jsonFileOperate.IfPlayerIsNoBinding(sender.getId())) {
-                            //玩家已绑定
-                            JSONObject currentPlayerInfo = jsonFileOperate.getCurrentClassPlayerInfo();
-                            String cPlayerName = analysisYmlFile.getYmlValue(currentPlayerInfo.getString("playerUUID") + ".name");
-                            String cPlayerKills = analysisYmlFile.getYmlValue(currentPlayerInfo.getString("playerUUID") + ".kills");
-                            String cPlayerDeaths = analysisYmlFile.getYmlValue(currentPlayerInfo.getString("playerUUID") + ".deaths");
-                            String cPlayerStreak = analysisYmlFile.getYmlValue(currentPlayerInfo.getString("playerUUID") + ".streak");
-                            double kill= Double.parseDouble(cPlayerKills);
-                            double death= Double.parseDouble(cPlayerDeaths);
-                            double ratio=kill/death;
-                            String PlayerRatio= String.format("%.2f",ratio);
-                            //构建卡片信息
-                            MultipleCardComponent PlayerInfoCard = new CardBuilder()
-                                    .setTheme(Theme.PRIMARY)
-                                    .setSize(Size.LG)
-                                    .addModule(new HeaderModule(new PlainTextElement("DESOLATE-PVP-DataQuery", false)))
-                                    .addModule(new SectionModule(new PlainTextElement("游戏昵称: " + cPlayerName, false),null,null))
-                                    .addModule(new SectionModule(new PlainTextElement("击杀: " + cPlayerKills, false),null,null))
-                                    .addModule(new SectionModule(new PlainTextElement("死亡: " + cPlayerDeaths, false),null,null))
-                                    .addModule(new SectionModule(new PlainTextElement("Ratio: "+PlayerRatio,false),null,null))
-                                    .addModule(new SectionModule(new PlainTextElement("最高连杀: " + cPlayerStreak, false),null,null))
-                                    .build();
-                            if (message != null) {
-                                message.reply(PlayerInfoCard);
-                            }
-                        } else {
-                            if (message != null) {
-                                message.reply("检测到你没有绑定游戏账户哦，快快去绑定一个叭！");
-                            }
-                        }
-                    } else {
-                        if (message != null) {
-                            message.reply("None");
-                        }
-                    }
-                }).register(this);
-        //注册命令 -- 获取玩家数据
-        new JKookCommand("绑定")
-                .addOptionalArgument(String.class, "None")
-                .executesUser((sender, arguments, message) -> {
-                    String senderName = sender.getName();
-                    if (arguments.length >= 1 & arguments[0] == "None") {
-                        if (message != null) {
-                            message.reply(senderName + " 请输入/绑定 [玩家游戏昵称] 来将你的KOOK和服务器绑定，请注意绑定时您需要在游戏内！");
-                        }
-                    } else {
-                        String PlayerName = (String) arguments[0];
+                    } else if (arguments[0].toString().equalsIgnoreCase("Help")) {
+                        MultipleCardComponent PlayerInfoCard = new CardBuilder()
+                                .setTheme(Theme.PRIMARY)
+                                .setSize(Size.LG)
+                                .addModule(new HeaderModule(new PlainTextElement("DESOLATE-MC-Bot(Help)", false)))
+                                .addModule(new SectionModule(new PlainTextElement("/ServerInfo - 反馈服务器当前的信息"), null, null))
+                                .addModule(new SectionModule(new PlainTextElement("/ServerInfo SelfPVP - 查询自己的PVP数据(需绑定游戏账户)"), null, null))
+                                .addModule(new SectionModule(new PlainTextElement("/ServerInfo bind {PlayerName} - 绑定自己的游戏账户\nTips: 请注意绑定时您需要在游戏内"), null, null))
+                                .build();
+                    } else if (arguments[0].toString().equalsIgnoreCase("bind")&&arguments.length>=2) {
+                        String PlayerName = (String) arguments[1];
                         String PlayerUUID = "00000000-0000-0000-0000-000000000000";
                         //获取数据
                         JSONObject jsonDataPack = getMcServerDataPackAnalysis.getServerInfo();
@@ -168,8 +136,44 @@ public class KookBotMain extends BasePlugin {
                                 message.reply("请检查玩家ID是否正确或玩家是否在游戏内！");
                             }
                         }
+                    } else if (arguments[0].toString().equalsIgnoreCase("SelfPVP")) {
+                        if (!jsonFileOperate.IfPlayerIsNoBinding(sender.getId())) {
+                            //玩家已绑定
+                            JSONObject currentPlayerInfo = jsonFileOperate.getCurrentClassPlayerInfo();
+                            String cPlayerName = analysisYmlFile.getYmlValue(currentPlayerInfo.getString("playerUUID") + ".name");
+                            String cPlayerKills = analysisYmlFile.getYmlValue(currentPlayerInfo.getString("playerUUID") + ".kills");
+                            String cPlayerDeaths = analysisYmlFile.getYmlValue(currentPlayerInfo.getString("playerUUID") + ".deaths");
+                            String cPlayerStreak = analysisYmlFile.getYmlValue(currentPlayerInfo.getString("playerUUID") + ".streak");
+                            double kill = Double.parseDouble(cPlayerKills);
+                            double death = Double.parseDouble(cPlayerDeaths);
+                            double ratio = kill / death;
+                            String PlayerRatio = String.format("%.2f", ratio);
+                            //构建卡片信息
+                            MultipleCardComponent PlayerInfoCard = new CardBuilder()
+                                    .setTheme(Theme.PRIMARY)
+                                    .setSize(Size.LG)
+                                    .addModule(new HeaderModule(new PlainTextElement("DESOLATE-PVP-DataQuery", false)))
+                                    .addModule(new SectionModule(new PlainTextElement("游戏昵称: " + cPlayerName, false), null, null))
+                                    .addModule(new SectionModule(new PlainTextElement("击杀: " + cPlayerKills, false), null, null))
+                                    .addModule(new SectionModule(new PlainTextElement("死亡: " + cPlayerDeaths, false), null, null))
+                                    .addModule(new SectionModule(new PlainTextElement("Ratio: " + PlayerRatio, false), null, null))
+                                    .addModule(new SectionModule(new PlainTextElement("最高连杀: " + cPlayerStreak, false), null, null))
+                                    .build();
+                            if (message != null) {
+                                message.reply(PlayerInfoCard);
+                            }
+                        } else {
+                            if (message != null) {
+                                message.reply("检测到你没有绑定游戏账户哦，快快去绑定一个叭！");
+                            }
+                        }
                     }
                 }).register(this);
+//        new JKookCommand("换绑")
+//                .addOptionalArgument(String.class, "None")
+//                .executesUser((sender, arguments, message) -> {
+//
+//                }).register(this);
         MyLogger("插件加载成功");
     }
 
