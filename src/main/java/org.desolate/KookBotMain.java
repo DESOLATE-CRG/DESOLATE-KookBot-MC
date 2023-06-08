@@ -136,7 +136,7 @@ public class KookBotMain extends BasePlugin {
                             String cPlayerStreak = analysisYmlFile.getYmlValue(currentPlayerInfo.getString("playerUUID") + ".streak");
                             double kill = Double.parseDouble(cPlayerKills);
                             double death = Double.parseDouble(cPlayerDeaths);
-                            double ratio = kill / death;
+                            double ratio = kill / death == 0 ? 1 : death;
                             String PlayerRatio = String.format("%.2f", ratio);
                             //构建卡片信息
                             MultipleCardComponent PlayerInfoCard = new CardBuilder()
