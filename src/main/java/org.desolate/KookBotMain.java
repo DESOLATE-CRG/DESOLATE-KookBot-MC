@@ -3,7 +3,6 @@ package org.desolate;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import snw.jkook.command.JKookCommand;
-import snw.jkook.entity.Guild;
 import snw.jkook.message.component.card.CardBuilder;
 import snw.jkook.message.component.card.MultipleCardComponent;
 import snw.jkook.message.component.card.Size;
@@ -12,17 +11,11 @@ import snw.jkook.message.component.card.element.PlainTextElement;
 import snw.jkook.message.component.card.module.HeaderModule;
 import snw.jkook.message.component.card.module.SectionModule;
 import snw.jkook.plugin.BasePlugin;
-import snw.jkook.scheduler.Scheduler;
-import snw.jkook.scheduler.Task;
 
-import java.util.Collection;
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class KookBotMain extends BasePlugin {
     private static KookBotMain instance;
-    private static Guild currentMessageGuild;
     private static final GetMcServerDataPackAnalysis getMcServerDataPackAnalysis = new GetMcServerDataPackAnalysis();
     private static final AnalysisYmlFile analysisYmlFile = new AnalysisYmlFile();
     private static final JsonFileOperate jsonFileOperate = new JsonFileOperate();
@@ -81,7 +74,7 @@ public class KookBotMain extends BasePlugin {
                             }
                         }
                     } else if (arguments[0].toString().equalsIgnoreCase("Help")) {
-                        MultipleCardComponent PlayerInfoCard = new CardBuilder()
+                        MultipleCardComponent HelpInfoCard = new CardBuilder()
                                 .setTheme(Theme.PRIMARY)
                                 .setSize(Size.LG)
                                 .addModule(new HeaderModule(new PlainTextElement("DESOLATE-MC-Bot(Help)", false)))
@@ -89,6 +82,9 @@ public class KookBotMain extends BasePlugin {
                                 .addModule(new SectionModule(new PlainTextElement("/ServerInfo SelfPVP - 查询自己的PVP数据(需绑定游戏账户)"), null, null))
                                 .addModule(new SectionModule(new PlainTextElement("/ServerInfo bind {PlayerName} - 绑定自己的游戏账户\nTips: 请注意绑定时您需要在游戏内"), null, null))
                                 .build();
+                        if (message != null) {
+                            message.reply(HelpInfoCard);
+                        }
                     } else if (arguments[0].toString().equalsIgnoreCase("bind") && arguments.length >= 2) {
                         String PlayerName = (String) arguments[1];
                         String PlayerUUID = "00000000-0000-0000-0000-000000000000";
@@ -177,9 +173,5 @@ public class KookBotMain extends BasePlugin {
 
     public static KookBotMain getInstance() {
         return instance;
-    }
-
-    public static void setCurrentMessageGuild(Guild currentMessageGuild) {
-        KookBotMain.currentMessageGuild = currentMessageGuild;
     }
 }
