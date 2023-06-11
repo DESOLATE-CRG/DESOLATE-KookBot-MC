@@ -80,9 +80,11 @@ public class KookBotMain extends BasePlugin {
                                 .setTheme(Theme.PRIMARY)
                                 .setSize(Size.LG)
                                 .addModule(new HeaderModule(new PlainTextElement("DESOLATE-MC-Bot(Help)", false)))
-                                .addModule(new SectionModule(new PlainTextElement("/ServerInfo - 反馈服务器当前的信息"), null, null))
+                                .addModule(new SectionModule(new PlainTextElement("/ServerInfo - 反馈服务器当前信息"), null, null))
                                 .addModule(new SectionModule(new PlainTextElement("/ServerInfo SelfPVP - 查询自己的PVP数据(需绑定游戏账户)"), null, null))
                                 .addModule(new SectionModule(new PlainTextElement("/ServerInfo bind {PlayerName} - 绑定自己的游戏账户\nTips: 请注意绑定时您需要在游戏内"), null, null))
+                                .addModule(new SectionModule(new PlainTextElement("/ServerInfo changeBind {originPlayerName} {newPlayerName} - 更换绑定(Operator)\nTips: 请注意更换绑定时被更换的玩家需要在游戏内"), null, null))
+                                .addModule(new SectionModule(new PlainTextElement("/ServerInfo Help - 机器人使用帮助"), null, null))
                                 .build();
                         if (message != null) {
                             message.reply(HelpInfoCard);

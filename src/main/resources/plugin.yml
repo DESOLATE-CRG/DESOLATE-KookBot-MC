@@ -1,12 +1,18 @@
 name: DESOLATE-KookBot-MC
 version: 1.0.0
 main: org.desolate.KookBotMain
-description: "在KOOK里获取MC服务器信息"
+description: "对接MC服务器与Kook进行更加方便的数据查询"
 api-version: 0.49.0
 commands:
-  查询:
-    description: 查询关于DESOLATE0-MC服务器的信息
-    usage: /查询 【服务器信息/玩家ID】
-  绑定:
-    description: 绑定KOOK与MC服务器
-    usage: /绑定 【玩家ID】
+  ServerInfo:
+    description: 反馈服务器当前信息
+    usage: /ServerInfo
+  SelfPVP:
+    description: 查询自己的PVP数据(需绑定游戏账户)
+    usage: /ServerInfo SelfPVP
+  bind:
+    description: 绑定自己的游戏账户
+    usage: /ServerInfo bind {PlayerName}
+  changeBind:
+    description: 更换绑定(Operator)
+    usage: /ServerInfo changeBind {originPlayerName} {newPlayerName}
