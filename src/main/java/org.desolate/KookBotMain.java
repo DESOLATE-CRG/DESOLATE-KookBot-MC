@@ -138,7 +138,7 @@ public class KookBotMain extends BasePlugin {
                             String cPlayerStreak = analysisYmlFile.getYmlValue(currentPlayerInfo.getString("playerUUID") + ".streak");
                             double kill = Double.parseDouble(cPlayerKills);
                             double death = Double.parseDouble(cPlayerDeaths);
-                            double ratio = kill / death == 0 ? 1 : death;
+                            double ratio = death == 0 ? kill : kill / death;
                             String PlayerRatio = String.format("%.2f", ratio);
                             //构建卡片信息
                             MultipleCardComponent PlayerInfoCard = new CardBuilder()
@@ -148,7 +148,7 @@ public class KookBotMain extends BasePlugin {
                                     .addModule(new SectionModule(new PlainTextElement("游戏昵称: " + cPlayerName, false), null, null))
                                     .addModule(new SectionModule(new PlainTextElement("击杀: " + cPlayerKills, false), null, null))
                                     .addModule(new SectionModule(new PlainTextElement("死亡: " + cPlayerDeaths, false), null, null))
-                                    .addModule(new SectionModule(new PlainTextElement("Ratio: " + PlayerRatio, false), null, null))
+                                    .addModule(new SectionModule(new PlainTextElement("K/D: " + PlayerRatio, false), null, null))
                                     .addModule(new SectionModule(new PlainTextElement("最高连杀: " + cPlayerStreak, false), null, null))
                                     .build();
                             if (message != null) {
