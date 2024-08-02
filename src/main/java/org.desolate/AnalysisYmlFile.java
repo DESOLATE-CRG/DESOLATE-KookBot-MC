@@ -7,7 +7,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 public class AnalysisYmlFile {
     private String ymlFilePath = "";
@@ -71,5 +73,23 @@ public class AnalysisYmlFile {
             }
         }
         return cron;
+    }
+
+    public Set<String> getKeysForPlayer(String playerName) {
+        Map<String, Object> dataMap = readYmlFile(dataFilePath);
+        if (dataMap == null) {
+            return Collections.emptySet();
+        }
+        Map<String, Object> playerData = (Map<String, Object>) dataMap.get(playerName);
+        return playerData != null ? playerData.keySet() : Collections.emptySet();
+    }
+
+    public Object getPlayerKeyValue(String playerName, String key) {
+        Map<String, Object> dataMap = readYmlFile(dataFilePath);
+        if (dataMap == null) {
+            return null;
+        }
+        Map<String, Object> playerData = (Map<String, Object>) dataMap.get(playerName);
+        return playerData != null ? playerData.get(key) : null;
     }
 }

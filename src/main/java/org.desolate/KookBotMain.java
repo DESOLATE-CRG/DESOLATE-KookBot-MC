@@ -17,6 +17,7 @@ import snw.jkook.plugin.BasePlugin;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class KookBotMain extends BasePlugin {
     private static KookBotMain instance;
@@ -48,7 +49,7 @@ public class KookBotMain extends BasePlugin {
     private void setupGlobalConfig() {
         getMcServerDataPackAnalysis.setServerAddress(getConfig().getString("ServerIPAddress"));
         getMcServerDataPackAnalysis.setServerPort(getConfig().getInt("ServerPort"));
-        analysisYmlFile.setYmlFilePath(getConfig().getString("PVPStateYmlFilePath"));
+        analysisYmlFile.setYmlFilePath(getConfig().getString("PVPStateYmlFilePath"), getConfig().getString("ItemKillState"));
         jsonFileOperate.setDataFolderPath(getDataFolder().getPath());
         jsonFileOperate.DatabaseFileInit();
     }
@@ -59,6 +60,12 @@ public class KookBotMain extends BasePlugin {
                 .addOptionalArgument(String.class, "default")
                 .executesUser(this::handleCommand)
                 .register(this);
+
+        new JKookCommand("cx")
+                .addPrefix("")
+                .addOptionalArgument(String.class, "default")
+                .executesUser(this::handleCxCommand)
+                .register(this);
     }
 
     private void handleCommand(User sender, Object[] args, Message message) {
@@ -67,7 +74,7 @@ public class KookBotMain extends BasePlugin {
 
         switch (command.toLowerCase()) {
             case "default":
-                handleDefaultCommand(sender, message);
+                handleDefaultCommand(message);
                 break;
             case "help":
                 handleHelpCommand(message);
@@ -91,7 +98,7 @@ public class KookBotMain extends BasePlugin {
         }
     }
 
-    private void handleDefaultCommand(User sender, Message message) {
+    private void handleDefaultCommand(Message message) {
         JSONObject result = getMcServerDataPackAnalysis.getServerInfo();
         MultipleCardComponent serverDataCard;
 
@@ -177,10 +184,10 @@ public class KookBotMain extends BasePlugin {
     private void handleSelfPVPCommand(User sender, Message message) {
         if (!jsonFileOperate.IfPlayerIsNoBinding(sender.getId())) {
             JSONObject currentPlayerInfo = jsonFileOperate.getCurrentClassPlayerInfo();
-            String cPlayerName = analysisYmlFile.getYmlValue(currentPlayerInfo.getString("playerUUID") + ".name");
-            String cPlayerKills = analysisYmlFile.getYmlValue(currentPlayerInfo.getString("playerUUID") + ".kills");
-            String cPlayerDeaths = analysisYmlFile.getYmlValue(currentPlayerInfo.getString("playerUUID") + ".deaths");
-            String cPlayerStreak = analysisYmlFile.getYmlValue(currentPlayerInfo.getString("playerUUID") + ".streak");
+            String cPlayerName = analysisYmlFile.getYmlValueFromYmlFile(currentPlayerInfo.getString("playerUUID") + ".name");
+            String cPlayerKills = analysisYmlFile.getYmlValueFromYmlFile(currentPlayerInfo.getString("playerUUID") + ".kills");
+            String cPlayerDeaths = analysisYmlFile.getYmlValueFromYmlFile(currentPlayerInfo.getString("playerUUID") + ".deaths");
+            String cPlayerStreak = analysisYmlFile.getYmlValueFromYmlFile(currentPlayerInfo.getString("playerUUID") + ".streak");
             double kill = Double.parseDouble(cPlayerKills);
             double death = Double.parseDouble(cPlayerDeaths);
             double ratio = death == 0 ? kill : kill / death;
@@ -189,7 +196,7 @@ public class KookBotMain extends BasePlugin {
             MultipleCardComponent playerInfoCard = new CardBuilder()
                     .setTheme(Theme.PRIMARY)
                     .setSize(Size.LG)
-                    .addModule(new HeaderModule(new PlainTextElement("DESOLATE-PVP-DataQuery", false)))
+                    .addModule(new HeaderModule(new PlainTextElement("DESOLATE-PVP", false)))
                     .addModule(new SectionModule(new PlainTextElement("游戏昵称: " + cPlayerName, false), null, null))
                     .addModule(new SectionModule(new PlainTextElement("击杀: " + cPlayerKills, false), null, null))
                     .addModule(new SectionModule(new PlainTextElement("死亡: " + cPlayerDeaths, false), null, null))
@@ -254,5 +261,60 @@ public class KookBotMain extends BasePlugin {
 
     public static KookBotMain getInstance() {
         return instance;
+    }
+
+    private void handleCxCommand(User sender, Object[] args, Message message) {
+        List<Object> arguments = Arrays.asList(args);
+        String command = (String) arguments.get(0);
+
+        switch (command.toLowerCase()) {
+            case "default":
+                //检查是否绑定
+                if (jsonFileOperate.IfPlayerIsNoBinding(sender.getId())) {
+                    MultipleCardComponent multipleCardComponent = new CardBuilder()
+                            .setTheme(Theme.PRIMARY)
+                            .setSize(Size.LG)
+                            .addModule(new HeaderModule(new PlainTextElement("DESOLATE-BOT", true)))
+                            .addModule(new SectionModule(new PlainTextElement("未查询到绑定信息")))
+                            .addModule(new SectionModule(new PlainTextElement("请先绑定账号或使用指令")))
+                            .addModule(new SectionModule(new PlainTextElement("/cx 玩家ID")))
+                            .build();
+                    if (message != null) {
+                        message.reply(multipleCardComponent);
+                    }
+                } else {
+                    JSONObject playerInfo = jsonFileOperate.getCurrentClassPlayerInfo();
+                    String playerName = playerInfo.getString("playerName");
+                    Set<String> keys = analysisYmlFile.getKeysForPlayer(playerName);
+
+                    if (keys != null && !keys.isEmpty()) {
+                        // 创建 CardBuilder 实例
+                        CardBuilder cardBuilder = new CardBuilder()
+                                .setTheme(Theme.PRIMARY)
+                                .setSize(Size.LG)
+                                .addModule(new HeaderModule(new PlainTextElement("DESOLATE-BOT", false)))
+                                .addModule(new SectionModule(new PlainTextElement("玩家ID："+playerName)));
+
+                        // 循环添加所有键值对
+                        for (String key : keys) {
+                            Object value = analysisYmlFile.getPlayerKeyValue(playerName, key);
+                            cardBuilder.addModule(new SectionModule(new PlainTextElement(key + ": " + value)));
+                        }
+
+                        // 构建 Component
+                        MultipleCardComponent component = cardBuilder.build();
+
+                        // 回复消息
+                        if (message != null) {
+                            message.reply(component);
+                        }
+                    } else {
+                        if (message != null) {
+                            message.reply("没有查询到 " + playerName + " 的武器数据信息");
+                        }
+                    }
+                }
+                break;
+        }
     }
 }
