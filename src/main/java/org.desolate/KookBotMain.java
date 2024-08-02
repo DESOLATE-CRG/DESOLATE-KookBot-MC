@@ -9,21 +9,23 @@ import snw.jkook.message.component.card.CardBuilder;
 import snw.jkook.message.component.card.MultipleCardComponent;
 import snw.jkook.message.component.card.Size;
 import snw.jkook.message.component.card.Theme;
+import snw.jkook.message.component.card.element.ButtonElement;
+import snw.jkook.message.component.card.element.InteractElement;
 import snw.jkook.message.component.card.element.PlainTextElement;
+import snw.jkook.message.component.card.module.ActionGroupModule;
 import snw.jkook.message.component.card.module.HeaderModule;
 import snw.jkook.message.component.card.module.SectionModule;
 import snw.jkook.plugin.BasePlugin;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class KookBotMain extends BasePlugin {
     private static KookBotMain instance;
     private static final GetMcServerDataPackAnalysis getMcServerDataPackAnalysis = new GetMcServerDataPackAnalysis();
-    private static final AnalysisYmlFile analysisYmlFile = new AnalysisYmlFile();
+    public static final AnalysisYmlFile analysisYmlFile = new AnalysisYmlFile();
     private static final JsonFileOperate jsonFileOperate = new JsonFileOperate();
+    public Map<User, Integer> userPages = new HashMap<>();
+    private static final int PAGE_SIZE = 10;
 
     @Override
     public void onLoad() {
@@ -42,6 +44,7 @@ public class KookBotMain extends BasePlugin {
 
         // 更新命令注册分类
         registerCommands();
+        getCore().getEventManager().registerHandlers(this, new EventListener());
 
         MyLogger("插件加载成功");
     }
@@ -269,12 +272,12 @@ public class KookBotMain extends BasePlugin {
 
         switch (command.toLowerCase()) {
             case "default":
-                //检查是否绑定
+                // 检查是否绑定
                 if (jsonFileOperate.IfPlayerIsNoBinding(sender.getId())) {
                     MultipleCardComponent multipleCardComponent = new CardBuilder()
                             .setTheme(Theme.PRIMARY)
                             .setSize(Size.LG)
-                            .addModule(new HeaderModule(new PlainTextElement("DESOLATE-BOT", true)))
+                            .addModule(new HeaderModule(new PlainTextElement("DESOLATE-BOT", false)))
                             .addModule(new SectionModule(new PlainTextElement("未查询到绑定信息")))
                             .addModule(new SectionModule(new PlainTextElement("请先绑定账号或使用指令")))
                             .addModule(new SectionModule(new PlainTextElement("/cx 玩家ID")))
@@ -283,38 +286,59 @@ public class KookBotMain extends BasePlugin {
                         message.reply(multipleCardComponent);
                     }
                 } else {
-                    JSONObject playerInfo = jsonFileOperate.getCurrentClassPlayerInfo();
-                    String playerName = playerInfo.getString("playerName");
-                    Set<String> keys = analysisYmlFile.getKeysForPlayer(playerName);
-
-                    if (keys != null && !keys.isEmpty()) {
-                        // 创建 CardBuilder 实例
-                        CardBuilder cardBuilder = new CardBuilder()
-                                .setTheme(Theme.PRIMARY)
-                                .setSize(Size.LG)
-                                .addModule(new HeaderModule(new PlainTextElement("DESOLATE-BOT", false)))
-                                .addModule(new SectionModule(new PlainTextElement("玩家ID："+playerName)));
-
-                        // 循环添加所有键值对
-                        for (String key : keys) {
-                            Object value = analysisYmlFile.getPlayerKeyValue(playerName, key);
-                            cardBuilder.addModule(new SectionModule(new PlainTextElement(key + ": " + value)));
-                        }
-
-                        // 构建 Component
-                        MultipleCardComponent component = cardBuilder.build();
-
-                        // 回复消息
-                        if (message != null) {
-                            message.reply(component);
-                        }
-                    } else {
-                        if (message != null) {
-                            message.reply("没有查询到 " + playerName + " 的武器数据信息");
-                        }
+                    // 初始化第一页并发送
+                    int initialPage = 0;
+                    MultipleCardComponent component = buildCardForPage(initialPage);
+                    if (message != null) {
+                        message.reply(component);
                     }
                 }
                 break;
         }
     }
+
+    public MultipleCardComponent buildCardForPage(int page) {
+        JSONObject playerInfo = jsonFileOperate.getCurrentClassPlayerInfo();
+        String playerName = playerInfo.getString("playerName");
+        Set<String> keys = analysisYmlFile.getKeysForPlayer(playerName);
+
+        // 计算当前页的开始和结束索引
+        int start = page * PAGE_SIZE;
+        int end = Math.min(start + PAGE_SIZE, keys.size());
+
+        // 创建 CardBuilder 实例
+        CardBuilder cardBuilder = new CardBuilder()
+                .setTheme(Theme.PRIMARY)
+                .setSize(Size.LG)
+                .addModule(new HeaderModule(new PlainTextElement("DESOLATE-BOT", false)))
+                .addModule(new SectionModule(new PlainTextElement("玩家ID：" + playerName)));
+
+        // 添加当前页的数据
+        int index = 0;
+        for (String key : keys) {
+            if (index >= start && index < end) {
+                Object value = analysisYmlFile.getPlayerKeyValue(playerName, key);
+                cardBuilder.addModule(new SectionModule(new PlainTextElement(key + ": " + value)));
+            }
+            index++;
+        }
+
+        // 添加分页按钮
+        List<InteractElement> interactElements = new ArrayList<>();
+        if (page > 0) {
+            interactElements.add(new ButtonElement(Theme.PRIMARY, "previous", ButtonElement.EventType.RETURN_VAL, new PlainTextElement("上一页")));
+        }
+        if (end < keys.size()) {
+            interactElements.add(new ButtonElement(Theme.PRIMARY, "next", ButtonElement.EventType.RETURN_VAL, new PlainTextElement("下一页")));
+        }
+
+        // 只有在 interactElements 不为空时才添加 ActionGroupModule
+        if (!interactElements.isEmpty()) {
+            cardBuilder.addModule(new ActionGroupModule(interactElements));
+        }
+
+        // 构建 Component
+        return cardBuilder.build();
+    }
+
 }

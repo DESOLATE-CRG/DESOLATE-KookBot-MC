@@ -1,8 +1,8 @@
 name: DESOLATE-KookBot-MC
-version: 1.0.0
+version: 1.1.0
 main: org.desolate.KookBotMain
 description: "对接MC服务器与Kook进行更加方便的数据查询"
-api-version: 0.49.0
+api-version: 0.52.1
 commands:
   ServerInfo:
     description: 反馈服务器当前信息
