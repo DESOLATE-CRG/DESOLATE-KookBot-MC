@@ -13,6 +13,7 @@ import snw.jkook.message.component.card.element.ButtonElement;
 import snw.jkook.message.component.card.element.InteractElement;
 import snw.jkook.message.component.card.element.PlainTextElement;
 import snw.jkook.message.component.card.module.ActionGroupModule;
+import snw.jkook.message.component.card.module.ContextModule;
 import snw.jkook.message.component.card.module.HeaderModule;
 import snw.jkook.message.component.card.module.SectionModule;
 import snw.jkook.plugin.BasePlugin;
@@ -113,6 +114,7 @@ public class KookBotMain extends BasePlugin {
                     .addModule(new SectionModule(new PlainTextElement("协议版本: " + result.getJSONObject("status").getString("protocol")), null, null))
                     .addModule(new SectionModule(new PlainTextElement("服务器版本: " + result.getJSONObject("status").getString("serverVersion")), null, null))
                     .addModule(new SectionModule(new PlainTextElement("在线玩家数/最大玩家数: " + result.getJSONObject("status").getString("onlinePlayers") + "/" + result.getJSONObject("status").getString("maxPlayers")), null, null))
+                    .addModule(new ContextModule((List.of(new PlainTextElement("Designed by DESOLATE")))))
                     .build();
         } else {
             serverDataCard = new CardBuilder()
@@ -120,6 +122,7 @@ public class KookBotMain extends BasePlugin {
                     .setSize(Size.LG)
                     .addModule(new HeaderModule(new PlainTextElement("DESOLATE-MC-Bot(ServerInfo)", false)))
                     .addModule(new HeaderModule(new PlainTextElement("错误: 服务器信息获取失败", false)))
+                    .addModule(new ContextModule((List.of(new PlainTextElement("Designed by DESOLATE")))))
                     .build();
         }
 
@@ -138,6 +141,7 @@ public class KookBotMain extends BasePlugin {
                 .addModule(new SectionModule(new PlainTextElement("/ServerInfo bind {PlayerName} - 绑定自己的游戏账户\nTips: 请注意绑定时您需要在游戏内"), null, null))
                 .addModule(new SectionModule(new PlainTextElement("/ServerInfo changeBind {originPlayerName} {newPlayerName} - 更换绑定(Operator)\nTips: 请注意更换绑定时被更换的玩家需要在游戏内"), null, null))
                 .addModule(new SectionModule(new PlainTextElement("/ServerInfo Help - 机器人使用帮助"), null, null))
+                .addModule(new ContextModule((List.of(new PlainTextElement("Designed by DESOLATE")))))
                 .build();
 
         if (message != null) {
@@ -166,6 +170,7 @@ public class KookBotMain extends BasePlugin {
                             .setSize(Size.LG)
                             .addModule(new HeaderModule(new PlainTextElement("DESOLATE-MC Server", false)))
                             .addModule(new SectionModule(new PlainTextElement("KOOK用户: " + sender.getName() + "\n游戏账户: " + playerName + "\n绑定成功!"), null, null))
+                            .addModule(new ContextModule((List.of(new PlainTextElement("Designed by DESOLATE")))))
                             .build();
 
                     if (message != null) {
@@ -205,6 +210,7 @@ public class KookBotMain extends BasePlugin {
                     .addModule(new SectionModule(new PlainTextElement("死亡: " + cPlayerDeaths, false), null, null))
                     .addModule(new SectionModule(new PlainTextElement("K/D: " + playerRatio, false), null, null))
                     .addModule(new SectionModule(new PlainTextElement("最高连杀: " + cPlayerStreak, false), null, null))
+                    .addModule(new ContextModule((List.of(new PlainTextElement("Designed by DESOLATE")))))
                     .build();
 
             if (message != null) {
@@ -281,6 +287,7 @@ public class KookBotMain extends BasePlugin {
                             .addModule(new SectionModule(new PlainTextElement("未查询到绑定信息")))
                             .addModule(new SectionModule(new PlainTextElement("请先绑定账号或使用指令")))
                             .addModule(new SectionModule(new PlainTextElement("/cx 玩家ID")))
+                            .addModule(new ContextModule((List.of(new PlainTextElement("Designed by DESOLATE")))))
                             .build();
                     if (message != null) {
                         message.reply(multipleCardComponent);
@@ -310,7 +317,7 @@ public class KookBotMain extends BasePlugin {
         CardBuilder cardBuilder = new CardBuilder()
                 .setTheme(Theme.PRIMARY)
                 .setSize(Size.LG)
-                .addModule(new HeaderModule(new PlainTextElement("DESOLATE-BOT", false)))
+                .addModule(new HeaderModule(new PlainTextElement("DESOLATE-BOT | 武器击杀查询", false)))
                 .addModule(new SectionModule(new PlainTextElement("玩家ID：" + playerName)));
 
         // 添加当前页的数据
@@ -336,7 +343,7 @@ public class KookBotMain extends BasePlugin {
         if (!interactElements.isEmpty()) {
             cardBuilder.addModule(new ActionGroupModule(interactElements));
         }
-
+        cardBuilder.addModule(new ContextModule((List.of(new PlainTextElement("Designed by DESOLATE")))));
         // 构建 Component
         return cardBuilder.build();
     }

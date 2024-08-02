@@ -41,11 +41,6 @@ public class AnalysisYmlFile {
         return getYmlValue(ymlKeyPath, ymlFilePath);
     }
 
-    // 解析yml封装，读取dataFilePath
-    public String getYmlValueFromDataFile(String ymlKeyPath) {
-        return getYmlValue(ymlKeyPath, dataFilePath);
-    }
-
     // 通用的方法从指定文件路径解析YML值
     private String getYmlValue(String ymlKeyPath, String filePath) {
         Map<String, Object> map = readYmlFile(filePath);
