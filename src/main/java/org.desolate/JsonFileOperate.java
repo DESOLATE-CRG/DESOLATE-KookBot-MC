@@ -6,6 +6,8 @@ import com.alibaba.fastjson2.JSONObject;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
 
 public class JsonFileOperate {
@@ -23,83 +25,71 @@ public class JsonFileOperate {
     }
 
     public boolean DatabaseFileInit() {
+        Path dbFilePath = Paths.get(dataFolderPath, playerDBFileName);
+
         try {
-            File dbFile = new File(dataFolderPath + playerDBFileName);
-            if (!dbFile.exists()) {
-                dbFile.createNewFile();
+            if (Files.notExists(dbFilePath)) {
+                Files.createFile(dbFilePath);
+
                 JSONArray jsonFileObj = new JSONArray();
-                BufferedWriter fileWriter = new BufferedWriter(new FileWriter(dataFolderPath + playerDBFileName));
-                fileWriter.write(jsonFileObj.toString());
-                fileWriter.close();
+                try (BufferedWriter fileWriter = Files.newBufferedWriter(dbFilePath, StandardCharsets.UTF_8)) {
+                    fileWriter.write(jsonFileObj.toString());
+                }
+
                 KookBotMain.MyLogger("数据库文件初始化成功");
-                return true;
             } else {
                 KookBotMain.MyLogger("已找到数据库文件");
-                return true;
             }
+            return true;
         } catch (IOException e) {
             KookBotMain.MyLogger("数据库文件初始化失败");
             return false;
         }
     }
 
+
     public boolean IfPlayerIsNoBinding(String playerKookID) {
         try {
-            //读取文件
             File targetFile = new File(dataFolderPath + playerDBFileName);
-            FileReader fileReader = new FileReader(targetFile);
-            Reader reader = new InputStreamReader(Files.newInputStream(targetFile.toPath()), StandardCharsets.UTF_8);
-            int ch = 0;
-            StringBuffer stringBuffer = new StringBuffer();
-            while ((ch = reader.read()) != -1) {
-                stringBuffer.append((char) ch);
-            }
-            fileReader.close();
-            reader.close();
-            //构造JSONArray对象并判断目标用户是否存在
-            JSONArray jsonArray = JSONArray.parse(stringBuffer.toString());
+            String fileContent = new String(Files.readAllBytes(targetFile.toPath()), StandardCharsets.UTF_8);
+
+            JSONArray jsonArray = JSONArray.parse(fileContent);
             String playerName = "None_Player_String";
+
             for (Object item : jsonArray) {
                 JSONObject jsonObject = JSONObject.parse(item.toString());
                 if (Objects.equals(jsonObject.getString("playerKookID"), playerKookID)) {
                     playerName = jsonObject.getString("playerName");
                     this.currentClassPlayerInfo = jsonObject;
+                    break;
                 }
             }
-            //判断玩家是否存在(true表示玩家不在数据库内,即未绑定)
+
             return Objects.equals(playerName, "None_Player_String");
         } catch (IOException e) {
             KookBotMain.MyLogger(e.getMessage());
-            //抓取到错误默认判断用户绑定存在以防不可预料错误
-            return true;
+            return true; // 默认返回true，表示用户未绑定，以防止不可预料的错误
         }
     }
 
     public boolean AddNewBinding(String playerName, String playerUUID, String playerKookID) {
+        Path filePath = Paths.get(dataFolderPath, playerDBFileName);
+
         try {
-            //读取数据库文件并解析
-            File jsonFile = new File(dataFolderPath + playerDBFileName);
-            FileReader fileReader = new FileReader(jsonFile);
-            Reader reader = new InputStreamReader(Files.newInputStream(jsonFile.toPath()), StandardCharsets.UTF_8);
-            int ch = 0;
-            StringBuffer stringBuffer = new StringBuffer();
-            while ((ch = reader.read()) != -1) {
-                stringBuffer.append((char) ch);
-            }
-            fileReader.close();
-            reader.close();
-            JSONArray jsonArrayObject = JSONArray.parse(stringBuffer.toString());
-            //构建新玩家数据信息
+            // 读取数据库文件并解析
+            String fileContent = new String(Files.readAllBytes(filePath), StandardCharsets.UTF_8);
+            JSONArray jsonArrayObject = JSONArray.parseArray(fileContent);
+
+            // 构建新玩家数据信息
             JSONObject newPlayerObj = new JSONObject();
             newPlayerObj.put("playerName", playerName);
             newPlayerObj.put("playerUUID", playerUUID);
             newPlayerObj.put("playerKookID", playerKookID);
-            //写入主数据库
+
+            // 写入主数据库
             jsonArrayObject.add(newPlayerObj);
-            //构建缓冲区写入流并实时写入文件
-            BufferedWriter fileWriter = new BufferedWriter(new FileWriter(dataFolderPath + playerDBFileName));
-            fileWriter.write(jsonArrayObject.toString());
-            fileWriter.close();
+            Files.write(filePath, jsonArrayObject.toString().getBytes(StandardCharsets.UTF_8));
+
             KookBotMain.MyLogger("检测到新写入内容，已更新文件");
             return true;
         } catch (IOException e) {
@@ -109,86 +99,64 @@ public class JsonFileOperate {
     }
 
     public boolean ChangePlayerBinding(String playerName, String playerNewName, String playerNewUUID) {
+        Path filePath = Paths.get(dataFolderPath, playerDBFileName);
+
         try {
-            //检测标志位
-            boolean flag = false;
-            //读取数据库文件并解析
-            File jsonFile = new File(dataFolderPath + playerDBFileName);
-            FileReader fileReader = new FileReader(jsonFile);
-            Reader reader = new InputStreamReader(Files.newInputStream(jsonFile.toPath()), StandardCharsets.UTF_8);
-            int ch = 0;
-            StringBuffer stringBuffer = new StringBuffer();
-            while ((ch = reader.read()) != -1) {
-                stringBuffer.append((char) ch);
-            }
-            fileReader.close();
-            reader.close();
-            //构建JsonArrayObj
-            JSONArray playerDBObj = JSONArray.parse(stringBuffer.toString());
-            //保存玩家数组位置
-            int index = 0;
-            //保存原玩家绑定信息
-            JSONObject jsonObject = null;
-            for (Object item : playerDBObj) {
-                jsonObject = JSONObject.parse(item.toString());
+            // 读取数据库文件并解析
+            String fileContent = new String(Files.readAllBytes(filePath), StandardCharsets.UTF_8);
+            JSONArray playerDBObj = JSONArray.parseArray(fileContent);
+
+            // 查找原玩家绑定信息并更新
+            boolean playerFound = false;
+            for (int i = 0; i < playerDBObj.size(); i++) {
+                JSONObject jsonObject = playerDBObj.getJSONObject(i);
                 if (Objects.equals(jsonObject.getString("playerName"), playerName)) {
-                    //检测到玩家信息
-                    flag = true;
+                    // 删除原玩家绑定信息
+                    playerDBObj.remove(i);
+
+                    // 构建新玩家数据模型
+                    JSONObject newPlayerObj = new JSONObject();
+                    newPlayerObj.put("playerName", playerNewName);
+                    newPlayerObj.put("playerUUID", playerNewUUID);
+                    newPlayerObj.put("playerKookID", jsonObject.getString("playerKookID"));
+
+                    // 写入主数据库
+                    playerDBObj.add(newPlayerObj);
+
+                    // 保存更新数据库文件
+                    Files.write(filePath, playerDBObj.toString().getBytes(StandardCharsets.UTF_8));
+
+                    KookBotMain.MyLogger("检测到新写入内容，已更新文件");
+                    playerFound = true;
                     break;
                 }
-                index++;
             }
-            if (flag) {
-                //删除原玩家绑定信息
-                playerDBObj.remove(index);
-                //构建新玩家数据模型
-                JSONObject newPlayerObj = new JSONObject();
-                newPlayerObj.put("playerName", playerNewName);
-                newPlayerObj.put("playerUUID", playerNewUUID);
-                newPlayerObj.put("playerKookID", jsonObject.getString("playerKookID"));
-                //写入主数据库
-                playerDBObj.add(newPlayerObj);
-                //保存更新数据库文件
-                BufferedWriter fileWriter = new BufferedWriter(new FileWriter(dataFolderPath + playerDBFileName));
-                fileWriter.write(playerDBObj.toString());
-                fileWriter.close();
-                KookBotMain.MyLogger("检测到新写入内容，已更新文件");
-                return true;
-            } else
-                return false;
+
+            return playerFound;
         } catch (IOException e) {
             KookBotMain.MyLogger(e.getMessage());
             return false;
         }
     }
 
+
     public boolean IfPlayerHavePermission(String playerKookID) {
+        Path filePath = Paths.get(dataFolderPath, administratorDBFileName);
+
         try {
-            //检测标志位
-            boolean flag = false;
-            //读取文件
-            File targetFile = new File(dataFolderPath + administratorDBFileName);
-            FileReader fileReader = new FileReader(targetFile);
-            Reader reader = new InputStreamReader(Files.newInputStream(targetFile.toPath()), StandardCharsets.UTF_8);
-            int ch = 0;
-            StringBuffer stringBuffer = new StringBuffer();
-            while ((ch = reader.read()) != -1) {
-                stringBuffer.append((char) ch);
-            }
-            fileReader.close();
-            reader.close();
-            //构造JSON对象
-            JSONObject administratorJsonObj = JSONObject.parse(stringBuffer.toString());
-            //取出管理员ID数组
-            JSONArray adArray = JSONArray.parse(administratorJsonObj.getString("adminArray"));
-            for (Object item : adArray) {
-                //检测到是管理员
+            // 读取文件并解析
+            String fileContent = new String(Files.readAllBytes(filePath), StandardCharsets.UTF_8);
+            JSONObject administratorJsonObj = JSONObject.parseObject(fileContent);
+
+            // 取出管理员ID数组并检测权限
+            JSONArray adminArray = administratorJsonObj.getJSONArray("adminArray");
+            for (Object item : adminArray) {
                 if (Objects.equals(item, playerKookID)) {
-                    flag = true;
-                    break;
+                    return true;
                 }
             }
-            return flag;
+
+            return false;
         } catch (IOException e) {
             KookBotMain.MyLogger(e.getMessage());
             return false;

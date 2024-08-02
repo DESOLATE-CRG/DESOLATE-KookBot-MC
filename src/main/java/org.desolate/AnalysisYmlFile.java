@@ -7,47 +7,67 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.Map;
 
 public class AnalysisYmlFile {
     private String ymlFilePath = "";
+    private String dataFilePath = "";
 
-    public void setYmlFilePath(String ymlFilePath) {
+    public void setYmlFilePath(String ymlFilePath, String dataFilePath) {
         this.ymlFilePath = ymlFilePath;
+        this.dataFilePath = dataFilePath;
     }
 
-    //解析yml封装
-    public String getYmlValue(String ymlKeyPath) {
+    // 通用的方法从指定路径读取YML文件
+    private Map<String, Object> readYmlFile(String filePath) {
         ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
-        InputStream input = null;
+        InputStream input;
         try {
-            input = new FileInputStream(ymlFilePath);
+            input = new FileInputStream(filePath);
         } catch (FileNotFoundException e) {
             return null;
         }
-        Map map;
         try {
-            map = objectMapper.readValue(input, Map.class);
+            return objectMapper.readValue(input, Map.class);
         } catch (IOException e) {
             return null;
         }
+    }
+
+    // 解析yml封装，读取ymlFilePath
+    public String getYmlValueFromYmlFile(String ymlKeyPath) {
+        return getYmlValue(ymlKeyPath, ymlFilePath);
+    }
+
+    // 解析yml封装，读取dataFilePath
+    public String getYmlValueFromDataFile(String ymlKeyPath) {
+        return getYmlValue(ymlKeyPath, dataFilePath);
+    }
+
+    // 通用的方法从指定文件路径解析YML值
+    private String getYmlValue(String ymlKeyPath, String filePath) {
+        Map<String, Object> map = readYmlFile(filePath);
+        if (map == null) {
+            return null;
+        }
+
         String[] split = ymlKeyPath.split("\\.");
-        Map info = new HashMap();
+        Map<String, Object> info = map;
         String cron = "";
+
         for (int i = 0; i < split.length; i++) {
-            if (i == 0) {
-                info = (Map) map.get(split[i]);
-            } else if (i == split.length - 1) {
-                if (info.get(split[i]) instanceof String)
-                    cron = (String) info.get(split[i]);
-                else
-                    cron = Integer.toString((Integer) info.get(split[i]));
+            if (i == split.length - 1) {
+                Object value = info.get(split[i]);
+                if (value instanceof String) {
+                    cron = (String) value;
+                } else if (value instanceof Integer) {
+                    cron = Integer.toString((Integer) value);
+                }
             } else {
-                info = (Map) info.get(split[i]);
-            }
-            if (info == null) {
-                return null;
+                info = (Map<String, Object>) info.get(split[i]);
+                if (info == null) {
+                    return null;
+                }
             }
         }
         return cron;

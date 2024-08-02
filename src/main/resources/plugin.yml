@@ -16,3 +16,6 @@ commands:
   changeBind:
     description: 更换绑定(Operator)
     usage: /ServerInfo changeBind {originPlayerName} {newPlayerName}
+  cx:
+    description: 查询武器击杀信息
+    usage: /cx <PlayerName>

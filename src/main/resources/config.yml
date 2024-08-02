@@ -1,3 +1,4 @@
 ServerIPAddress: "127.0.0.1"
 ServerPort: 25565
 PVPStateYmlFilePath: "C://example.yml"
+ItemKillState: "C://example.yml"
