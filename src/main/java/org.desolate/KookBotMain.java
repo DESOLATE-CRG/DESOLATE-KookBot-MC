@@ -275,32 +275,31 @@ public class KookBotMain extends BasePlugin {
     private void handleCxCommand(User sender, Object[] args, Message message) {
         List<Object> arguments = Arrays.asList(args);
         String command = (String) arguments.get(0);
+        String commandLowerCase = command.toLowerCase();
 
-        switch (command.toLowerCase()) {
-            case "default":
-                // 检查是否绑定
-                if (jsonFileOperate.IfPlayerIsNoBinding(sender.getId())) {
-                    MultipleCardComponent multipleCardComponent = new CardBuilder()
-                            .setTheme(Theme.PRIMARY)
-                            .setSize(Size.LG)
-                            .addModule(new HeaderModule(new PlainTextElement("DESOLATE-BOT", false)))
-                            .addModule(new SectionModule(new PlainTextElement("未查询到绑定信息")))
-                            .addModule(new SectionModule(new PlainTextElement("请先绑定账号或使用指令")))
-                            .addModule(new SectionModule(new PlainTextElement("/cx 玩家ID")))
-                            .addModule(new ContextModule((List.of(new PlainTextElement("Designed by DESOLATE")))))
-                            .build();
-                    if (message != null) {
-                        message.reply(multipleCardComponent);
-                    }
-                } else {
-                    // 初始化第一页并发送
-                    int initialPage = 0;
-                    MultipleCardComponent component = buildCardForPage(initialPage);
-                    if (message != null) {
-                        message.reply(component);
-                    }
+        if (commandLowerCase.equals("default")) {
+            // 检查是否绑定
+            if (jsonFileOperate.IfPlayerIsNoBinding(sender.getId())) {
+                MultipleCardComponent multipleCardComponent = new CardBuilder()
+                        .setTheme(Theme.PRIMARY)
+                        .setSize(Size.LG)
+                        .addModule(new HeaderModule(new PlainTextElement("DESOLATE-BOT", false)))
+                        .addModule(new SectionModule(new PlainTextElement("未查询到绑定信息")))
+                        .addModule(new SectionModule(new PlainTextElement("请先绑定账号或使用指令")))
+                        .addModule(new SectionModule(new PlainTextElement("/cx 玩家ID")))
+                        .addModule(new ContextModule((List.of(new PlainTextElement("Designed by DESOLATE")))))
+                        .build();
+                if (message != null) {
+                    message.reply(multipleCardComponent);
                 }
-                break;
+            } else {
+                // 初始化第一页并发送
+                int initialPage = 0;
+                MultipleCardComponent component = buildCardForPage(initialPage);
+                if (message != null) {
+                    message.reply(component);
+                }
+            }
         }
     }
 
