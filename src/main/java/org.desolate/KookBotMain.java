@@ -140,6 +140,7 @@ public class KookBotMain extends BasePlugin {
                 .addModule(new SectionModule(new PlainTextElement("/ServerInfo SelfPVP - 查询自己的PVP数据(需绑定游戏账户)"), null, null))
                 .addModule(new SectionModule(new PlainTextElement("/ServerInfo bind {PlayerName} - 绑定自己的游戏账户\nTips: 请注意绑定时您需要在游戏内"), null, null))
                 .addModule(new SectionModule(new PlainTextElement("/ServerInfo changeBind {originPlayerName} {newPlayerName} - 更换绑定(Operator)\nTips: 请注意更换绑定时被更换的玩家需要在游戏内"), null, null))
+                .addModule(new SectionModule(new PlainTextElement("/cx - 查询武器击杀数据")))
                 .addModule(new SectionModule(new PlainTextElement("/ServerInfo Help - 机器人使用帮助"), null, null))
                 .addModule(new ContextModule((List.of(new PlainTextElement("Designed by DESOLATE")))))
                 .build();
