@@ -285,8 +285,7 @@ public class KookBotMain extends BasePlugin {
                         .setSize(Size.LG)
                         .addModule(new HeaderModule(new PlainTextElement("DESOLATE-BOT", false)))
                         .addModule(new SectionModule(new PlainTextElement("未查询到绑定信息")))
-                        .addModule(new SectionModule(new PlainTextElement("请先绑定账号或使用指令")))
-                        .addModule(new SectionModule(new PlainTextElement("/cx 玩家ID")))
+                        .addModule(new SectionModule(new PlainTextElement("请先绑定账号")))
                         .addModule(new ContextModule((List.of(new PlainTextElement("Designed by DESOLATE")))))
                         .build();
                 if (message != null) {
