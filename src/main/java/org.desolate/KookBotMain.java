@@ -259,7 +259,6 @@ public class KookBotMain extends BasePlugin {
         }
     }
 
-
     @Override
     public void onDisable() {
         MyLogger("插件正在关闭");
@@ -317,7 +316,7 @@ public class KookBotMain extends BasePlugin {
                 .setTheme(Theme.PRIMARY)
                 .setSize(Size.LG)
                 .addModule(new HeaderModule(new PlainTextElement("DESOLATE-BOT | 武器击杀查询", false)))
-                .addModule(new SectionModule(new PlainTextElement("玩家ID：" + playerName)));
+                .addModule(new SectionModule(new PlainTextElement("玩家ID： " + playerName)));
 
         // 添加当前页的数据
         int index = 0;
@@ -346,5 +345,4 @@ public class KookBotMain extends BasePlugin {
         // 构建 Component
         return cardBuilder.build();
     }
-
 }

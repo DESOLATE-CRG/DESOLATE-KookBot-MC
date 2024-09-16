@@ -13,7 +13,6 @@ public class EventListener implements Listener {
         String buttonValue = event.getValue();
         User user = event.getUser();
 
-        // 获取用户当前的页数，默认值为 0
         int currentPage = KookBotMain.getInstance().userPages.getOrDefault(user, 0);
 
         // 更新页数
@@ -31,5 +30,4 @@ public class EventListener implements Listener {
         MultipleCardComponent component = KookBotMain.getInstance().buildCardForPage(currentPage);
         user.sendPrivateMessage(component);
     }
-
 }

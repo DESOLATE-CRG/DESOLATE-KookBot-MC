@@ -47,7 +47,6 @@ public class JsonFileOperate {
         }
     }
 
-
     public boolean IfPlayerIsNoBinding(String playerKookID) {
         try {
             File targetFile = new File(dataFolderPath + playerDBFileName);
@@ -138,7 +137,6 @@ public class JsonFileOperate {
             return false;
         }
     }
-
 
     public boolean IfPlayerHavePermission(String playerKookID) {
         Path filePath = Paths.get(dataFolderPath, administratorDBFileName);
