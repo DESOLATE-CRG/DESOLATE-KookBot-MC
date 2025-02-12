@@ -121,7 +121,7 @@ public class KookBotMain extends BasePlugin {
                     .setTheme(Theme.PRIMARY)
                     .setSize(Size.LG)
                     .addModule(new HeaderModule(new PlainTextElement("DESOLATE-MC-Bot(ServerInfo)", false)))
-                    .addModule(new HeaderModule(new PlainTextElement("错误: 服务器信息获取失败", false)))
+                    .addModule(new HeaderModule(new PlainTextElement("服务器已离线！", false)))
                     .addModule(new ContextModule((List.of(new PlainTextElement("Designed by DESOLATE")))))
                     .build();
         }
@@ -153,7 +153,24 @@ public class KookBotMain extends BasePlugin {
     private void handleBindCommand(User sender, String playerName, Message message) {
         String playerUUID = "00000000-0000-0000-0000-000000000000";
         JSONObject jsonDataPack = getMcServerDataPackAnalysis.getServerInfo();
-        JSONArray jsonArrayList = JSONArray.parse(jsonDataPack.getJSONObject("onlinePlayerList").getString("playerList"));
+
+        JSONArray jsonArrayList = JSONArray.parse(jsonDataPack.getJSONObject("onlinePlayerList") != null ?
+                jsonDataPack.getJSONObject("onlinePlayerList").getString("playerList") : null);
+
+        if (jsonArrayList == null) {
+            MultipleCardComponent emptyCard = new CardBuilder()
+                    .setTheme(Theme.PRIMARY)
+                    .setSize(Size.LG)
+                    .addModule(new HeaderModule(new PlainTextElement("DESOLATE-MC Server", false)))
+                    .addModule(new SectionModule(new PlainTextElement("服务器已离线！"), null, null))
+                    .addModule(new ContextModule(List.of(new PlainTextElement("Designed by DESOLATE"))))
+                .build();
+
+            if (message != null) {
+                message.reply(emptyCard);
+            }
+            return;
+        }
 
         for (Object item : jsonArrayList) {
             JSONObject temp = JSONObject.parse(item.toString());
@@ -171,8 +188,8 @@ public class KookBotMain extends BasePlugin {
                             .setSize(Size.LG)
                             .addModule(new HeaderModule(new PlainTextElement("DESOLATE-MC Server", false)))
                             .addModule(new SectionModule(new PlainTextElement("KOOK用户: " + sender.getName() + "\n游戏账户: " + playerName + "\n绑定成功!"), null, null))
-                            .addModule(new ContextModule((List.of(new PlainTextElement("Designed by DESOLATE")))))
-                            .build();
+                            .addModule(new ContextModule(List.of(new PlainTextElement("Designed by DESOLATE"))))
+                        .build();
 
                     if (message != null) {
                         message.reply(bindCard);
